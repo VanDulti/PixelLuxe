@@ -13,5 +13,7 @@ public class Main {
         mainFrame.setResizable(true);
         mainFrame.setSize(200, 100);
         mainFrame.setVisible(true);
+
+        System.out.println("Hello World!");
     }
 }
