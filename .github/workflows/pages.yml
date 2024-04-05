@@ -44,10 +44,8 @@ jobs:
         path: staging
   build-web:
     runs-on: ubuntu-latest
-
     steps:
-      - run: pwd
-      - run: ls
+      - uses: actions/checkout@v3
       - run: mkdir staging & cp pixelluxe-web/** staging
       - name: Upload web bundle
         uses: actions/upload-artifact@v3
