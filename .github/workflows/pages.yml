@@ -50,7 +50,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: web-bundle
-          path: pixelluxe-web
+          path: pixelluxe-web/index.html
   deploy:
     environment:
       name: github-pages
