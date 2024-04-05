@@ -36,7 +36,7 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pixelluxe-gui/pom.xml
-    - run: mkdir staging && cp pixelluxe/target/*.jar staging
+    - run: mkdir staging && cp pixelluxe-gui/target/*.jar staging
     - name: Upload jar file
       uses: actions/upload-artifact@v3
       with:
@@ -56,6 +56,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    needs: [build-java, build-web]
     steps:
       - name: Download web bundle
         uses: actions/download-artifact@v3
