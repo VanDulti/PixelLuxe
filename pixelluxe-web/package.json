@@ -1,0 +1,13 @@
+{
+  "name": "pixelluxe-web",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx --yes vite",
+    "build": "npx --yes vite build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
