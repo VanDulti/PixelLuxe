@@ -50,7 +50,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: web-bundle
-          path: staging
+          path: pixelluxe-web
   deploy:
     environment:
       name: github-pages
@@ -68,6 +68,11 @@ jobs:
         with:
           name: java-package
 
+      - run: |
+              mkdir bundle
+              cp -r web-bundle/** bundle
+              cp -r java-package/** bundle
+
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Pages
@@ -76,7 +81,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload entire repository
-          path: 'staging'
+          path: 'bundle'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
