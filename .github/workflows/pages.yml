@@ -22,11 +22,6 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-    - name: EditorConfig-Action
-      uses: zbeekman/EditorConfig-Action@v1.1.1
   build-java-21:
 
     runs-on: ubuntu-latest
