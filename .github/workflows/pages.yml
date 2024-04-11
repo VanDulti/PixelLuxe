@@ -71,6 +71,7 @@ jobs:
 
       - run: |
               mkdir bundle
+              ls -l
               cp -r web-bundle/** bundle
               cp -r java-package/** bundle
 
