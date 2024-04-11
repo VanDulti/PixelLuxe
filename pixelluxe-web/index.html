@@ -21,9 +21,12 @@
 <body>
 <div id="container"></div>
 <script type="module">
+    const href = window.location.pathname;
+    const dir = href.substring(0, href.lastIndexOf('/')) + "/";
+    console.log(dir)
     await cheerpjInit();
     cheerpjCreateDisplay(-1, -1, document.getElementById("container"));
-    await cheerpjRunJar("/app/pixelluxe-gui-1.0-SNAPSHOT.jar");
+    await cheerpjRunJar(`/app${dir}pixelluxe-gui-1.0-SNAPSHOT.jar`);
 </script>
 </body>
 </html>
