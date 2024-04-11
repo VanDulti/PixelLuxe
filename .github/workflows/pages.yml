@@ -69,12 +69,6 @@ jobs:
         with:
           name: java-package
 
-      - run: |
-              mkdir bundle
-              ls -l
-              cp -r web-bundle/** bundle
-              cp -r java-package/** bundle
-
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Pages
@@ -83,7 +77,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload entire repository
-          path: 'bundle'
+          path: '.'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
