@@ -13,7 +13,7 @@ public class MainForm {
         mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
-        JLabel label = new JLabel("Hello World!");
+        JLabel label = new JLabel("Bazinga!");
         mainPanel.add(label);
     }
 }
