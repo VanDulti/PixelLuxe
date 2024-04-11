@@ -7,7 +7,7 @@ public class Main {
         MainForm mainForm = new MainForm();
         mainForm.initialize();
         JPanel mainPanel = mainForm.getMainPanel();
-
+        System.out.println("Test");
         JFrame mainFrame = new JFrame("PixelLuxe");
         mainFrame.setContentPane(mainPanel);
         mainFrame.setResizable(true);
