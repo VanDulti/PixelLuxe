@@ -1,7 +1,11 @@
-package at.jku.pixelluxe;
+package at.jku.pixelluxe.ui;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Objects;
 
 public class MainForm extends JPanel {
 	public void initialize() {
@@ -25,8 +29,11 @@ public class MainForm extends JPanel {
 
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
 
-		JPanel defaultTab = new JPanel();
-		defaultTab.setBackground(Color.LIGHT_GRAY);
+
+		Image image = loadDemoImage();
+
+		WorkingArea defaultTab = new WorkingArea(image);
+		defaultTab.initialize();
 
 		JPanel anotherTab = new JPanel();
 		anotherTab.setBackground(Color.PINK);
@@ -42,5 +49,14 @@ public class MainForm extends JPanel {
 
 		add(toolbarPanel, BorderLayout.PAGE_START);
 		add(tabbedPane, BorderLayout.CENTER);
+	}
+
+	private Image loadDemoImage() {
+		try {
+			URL res = getClass().getClassLoader().getResource("lenna.png");
+			return ImageIO.read(Objects.requireNonNull(res));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

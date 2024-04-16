@@ -1,4 +1,4 @@
-package at.jku.pixelluxe.menu;
+package at.jku.pixelluxe.ui.menu;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -23,8 +23,10 @@ public class FileMenu extends JMenu {
 		JMenuItem openButton = new JMenuItem("Open");
 		openButton.addActionListener(this::openButtonPressed);
 
+		add(openButton);
 		add(saveButton);
 		add(saveAsButton);
+
 		return this;
 	}
 

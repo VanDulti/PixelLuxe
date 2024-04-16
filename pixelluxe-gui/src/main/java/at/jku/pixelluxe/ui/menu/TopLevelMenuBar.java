@@ -1,4 +1,4 @@
-package at.jku.pixelluxe.menu;
+package at.jku.pixelluxe.ui.menu;
 
 import javax.swing.*;
 
