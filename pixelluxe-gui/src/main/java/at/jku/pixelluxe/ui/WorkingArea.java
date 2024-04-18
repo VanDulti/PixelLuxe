@@ -1,5 +1,7 @@
 package at.jku.pixelluxe.ui;
 
+import at.jku.pixelluxe.image.PaintableImage;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -10,17 +12,17 @@ public class WorkingArea extends JPanel {
 	public static final long MIN_FRAME_TIME_MILLIS = (long) (1000.0 / MIN_FRAMES_PER_SECOND);
 	private static final int MINIMAL_VISIBLE_SPACE = 10;
 	private static final int PIXEL_GRID_SCALE_THRESHOLD = 20;
-	private double x = 0.0;
-	private double y = 0.0;
-	private double scale = 1.0;
 	/**
 	 * The buffered image to be displayed. The actual content should then be drawn on-top of that BufferedImage (actual
 	 * image, filters, layers, raw painting) as this is supposed to be more efficient than drawing directly on the
 	 * JPanel.
 	 */
-	private final Image image;
+	private final PaintableImage image;
+	private double x = 0.0;
+	private double y = 0.0;
+	private double scale = 1.0;
 
-	public WorkingArea(Image image) {
+	public WorkingArea(PaintableImage image) {
 		this.image = image;
 	}
 
@@ -32,9 +34,16 @@ public class WorkingArea extends JPanel {
 
 	public void addListeners() {
 		ImageDragListener imageDragListener = new ImageDragListener();
+		ImagePaintListener imagePaintListener = new ImagePaintListener();
+
 		addMouseMotionListener(imageDragListener);
 		addMouseListener(imageDragListener);
+
+		addMouseMotionListener(imagePaintListener);
+		addMouseListener(imagePaintListener);
+
 		addMouseWheelListener(new MouseWheelListener());
+
 		addComponentListener(new ComponentListener());
 		addKeyListener(new KeyListener());
 	}
@@ -54,7 +63,7 @@ public class WorkingArea extends JPanel {
 		g2d.translate(x, y);
 		AffineTransform oldTransform = g2d.getTransform();
 		g2d.scale(scale, scale);
-		g2d.drawImage(image, 0, 0, this);
+		g2d.drawImage(image.image(), 0, 0, this);
 		g2d.setTransform(oldTransform);
 		if (scale > PIXEL_GRID_SCALE_THRESHOLD) {
 			// Drawing a pixel grid around the images pixels (if zoomed in)
@@ -78,8 +87,8 @@ public class WorkingArea extends JPanel {
 	 */
 	private void drawPixelGrid(Graphics2D g2d) {
 		g2d.setColor(Color.MAGENTA);
-		int scaledWidth = (int) (image.getWidth(null) * scale);
-		int scaledHeight = (int) (image.getHeight(null) * scale);
+		int scaledWidth = (int) (image.getWidth() * scale);
+		int scaledHeight = (int) (image.getHeight() * scale);
 		for (int i = 0; i < scaledWidth; i++) {
 			int x = (int) (i * scale);
 			g2d.drawLine(x, 0, x, scaledHeight);
@@ -96,8 +105,8 @@ public class WorkingArea extends JPanel {
 	}
 
 	private void restrictBounds() {
-		int imageHeight = (int) (image.getHeight(null) * scale);
-		int imageWidth = (int) (image.getWidth(null) * scale);
+		int imageHeight = (int) (image.getHeight() * scale);
+		int imageWidth = (int) (image.getWidth() * scale);
 		if (x < -imageWidth + MINIMAL_VISIBLE_SPACE) {
 			x = -imageWidth + MINIMAL_VISIBLE_SPACE;
 		}
@@ -125,6 +134,41 @@ public class WorkingArea extends JPanel {
 			restrictBounds();
 			render();
 			System.out.println("Component resized!");
+		}
+	}
+
+	private class ImagePaintListener extends MouseAdapter {
+		private Point initialPoint = null;
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			System.out.println("Mouse pressed!");
+			initialPoint = e.getPoint();
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			System.out.println("Mouse released!");
+			initialPoint = null;
+		}
+
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			System.out.println("image paint mouseDragged");
+			if (initialPoint == null) {
+				return;
+			}
+			if (!isPaintKeyDown(e)) {
+				return;
+			}
+			Point currentPoint = e.getPoint();
+			image.drawLine(initialPoint.x, initialPoint.y, currentPoint.x, currentPoint.y, Color.black);
+			initialPoint = currentPoint;
+			render();
+		}
+
+		private boolean isPaintKeyDown(MouseEvent e) {
+			return e.isAltDown();
 		}
 	}
 

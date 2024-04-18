@@ -1,8 +1,11 @@
 package at.jku.pixelluxe.ui;
 
+import at.jku.pixelluxe.image.SimplePaintableImage;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
@@ -30,9 +33,9 @@ public class MainForm extends JPanel {
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
 
 
-		Image image = loadDemoImage();
+		BufferedImage image = loadDemoImage();
 
-		WorkingArea defaultTab = new WorkingArea(image);
+		WorkingArea defaultTab = new WorkingArea(new SimplePaintableImage(image));
 		defaultTab.initialize();
 
 		JPanel anotherTab = new JPanel();
@@ -51,7 +54,7 @@ public class MainForm extends JPanel {
 		add(tabbedPane, BorderLayout.CENTER);
 	}
 
-	private Image loadDemoImage() {
+	private BufferedImage loadDemoImage() {
 		try {
 			URL res = getClass().getClassLoader().getResource("lenna.png");
 			return ImageIO.read(Objects.requireNonNull(res));
