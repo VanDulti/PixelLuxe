@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 
 public class WorkingArea extends JPanel {
 	public static final double MIN_FRAMES_PER_SECOND = 30.0;
@@ -18,10 +19,22 @@ public class WorkingArea extends JPanel {
 	 * image, filters, layers, raw painting) as this is supposed to be more efficient than drawing directly on the
 	 * JPanel.
 	 */
-	private final Image image;
+	private Image image;
+	private BufferedImage filteredImage;
 
 	public WorkingArea(Image image) {
 		this.image = image;
+		this.filteredImage = null;
+	}
+
+	public void setImage(Image image){
+		this.image = image;
+		repaint();
+	}
+
+	public void setFilteredImage(BufferedImage filteredImage){
+		this.filteredImage = filteredImage;
+		repaint();
 	}
 
 	public void initialize() {
@@ -54,7 +67,15 @@ public class WorkingArea extends JPanel {
 		g2d.translate(x, y);
 		AffineTransform oldTransform = g2d.getTransform();
 		g2d.scale(scale, scale);
-		g2d.drawImage(image, 0, 0, this);
+
+		// checks whether it's the original or already filtered image
+		if (image != null) {
+			g2d.drawImage(image, 0, 0, this);
+		}
+		if (filteredImage != null) {
+			g2d.drawImage(filteredImage, 0, 0, this);
+		}
+
 		g2d.setTransform(oldTransform);
 		if (scale > PIXEL_GRID_SCALE_THRESHOLD) {
 			// Drawing a pixel grid around the images pixels (if zoomed in)
