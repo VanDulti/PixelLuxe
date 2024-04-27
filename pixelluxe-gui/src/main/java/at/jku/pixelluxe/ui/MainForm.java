@@ -66,10 +66,7 @@ public class MainForm extends JPanel {
 		int w = loadDemoImage().getWidth(null);
 		int h = loadDemoImage().getHeight(null);
 
-		BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-		Convolution c = new Convolution();
-
-		bi = c.filter(loadDemoImage(), Kernels.SHARPEN);
+		BufferedImage bi = new Convolution().filter(loadDemoImage(), Kernels.SHARPEN);
 		defaultTab.setFilteredImage(bi);
 	}
 

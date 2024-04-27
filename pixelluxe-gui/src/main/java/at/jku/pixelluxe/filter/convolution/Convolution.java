@@ -2,7 +2,6 @@ package at.jku.pixelluxe.filter.convolution;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import at.jku.pixelluxe.filter.convolution.Kernels;
 
 public class Convolution {
 
