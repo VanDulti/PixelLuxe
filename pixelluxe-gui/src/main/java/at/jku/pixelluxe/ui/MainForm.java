@@ -63,10 +63,7 @@ public class MainForm extends JPanel {
 	}
 
 	private void applyConvolutionFilter(){
-		int w = loadDemoImage().getWidth(null);
-		int h = loadDemoImage().getHeight(null);
-
-		BufferedImage bi = new Convolution().filter(loadDemoImage(), Kernels.SHARPEN);
+		BufferedImage bi = new Convolution().filter(loadDemoImage(), Kernels.YSOBEL);
 		defaultTab.setFilteredImage(bi);
 	}
 

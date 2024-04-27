@@ -5,6 +5,11 @@ import java.awt.image.BufferedImage;
 
 public class Convolution {
 
+	//TODO create/try params for factor and kernel size/content
+	//	   Dropdown Menu for different kernels
+	//     Slider for factor (ez) and intensity of kernel effect (hard)
+	//	   colors for edge kernels are present, should be b/w
+
 	public BufferedImage filter(Image image, Kernel kernel){
 		int[][] KERNEL = kernel.getMatrix();
 		int FACTOR = kernel.getFactor();
