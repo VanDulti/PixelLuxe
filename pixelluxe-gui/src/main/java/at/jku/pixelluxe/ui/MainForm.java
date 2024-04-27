@@ -1,6 +1,6 @@
 package at.jku.pixelluxe.ui;
 
-import at.jku.pixelluxe.filter.Convolution;
+import at.jku.pixelluxe.filter.convolution.Convolution;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
+import at.jku.pixelluxe.filter.convolution.*;
 
 public class MainForm extends JPanel {
 
@@ -68,7 +69,7 @@ public class MainForm extends JPanel {
 		BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 		Convolution c = new Convolution();
 
-		bi = c.filter(loadDemoImage());
+		bi = c.filter(loadDemoImage(), Kernels.SHARPEN);
 		defaultTab.setFilteredImage(bi);
 	}
 
