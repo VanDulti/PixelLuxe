@@ -1,8 +1,9 @@
 package at.jku.pixelluxe.image;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
-public record SimplePaintableImage(Image image) implements PaintableImage {
+public record SimplePaintableImage(BufferedImage image) implements PaintableImage {
 
 	@Override
 	public int getWidth() {
