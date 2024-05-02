@@ -2,6 +2,9 @@ package at.jku.pixelluxe.ui;
 
 import at.jku.pixelluxe.ui.menu.TopLevelMenuBar;
 
+import com.formdev.flatlaf.FlatDarkLaf;
+
+
 import javax.swing.*;
 
 public class Main {
@@ -15,8 +18,16 @@ public class Main {
 	}
 
 	private void initialize() {
+
+		try {
+			UIManager.setLookAndFeel(new FlatDarkLaf());
+		} catch (UnsupportedLookAndFeelException e) {
+			System.out.println(e.getStackTrace());
+		}
+
 		MainForm mainForm = new MainForm();
 		mainForm.initialize();
+
 
 		JFrame mainFrame = new JFrame("PixelLuxe");
 		mainFrame.setJMenuBar(new TopLevelMenuBar().initialize());

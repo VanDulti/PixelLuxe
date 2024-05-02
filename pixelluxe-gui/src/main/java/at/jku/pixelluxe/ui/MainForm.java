@@ -12,6 +12,8 @@ import java.util.Objects;
 
 public class MainForm extends JPanel {
 	public void initialize() {
+
+
 		setLayout(new BorderLayout(16, 16));
 
 		JPanel toolbarPanel = new JPanel();
