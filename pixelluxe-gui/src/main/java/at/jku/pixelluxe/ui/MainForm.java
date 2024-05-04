@@ -1,16 +1,22 @@
 package at.jku.pixelluxe.ui;
 
 import at.jku.pixelluxe.image.SimplePaintableImage;
+import at.jku.pixelluxe.ui.dialog.DrawDialog;
+import at.jku.pixelluxe.ui.tools.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ItemEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 
+
 public class MainForm extends JPanel {
+	WorkingArea defaultTab = null;
+	JToolBar mainToolBar = null;
 	public void initialize() {
 
 
@@ -20,11 +26,13 @@ public class MainForm extends JPanel {
 
 		toolbarPanel.setLayout(new BorderLayout());
 
-		JToolBar mainToolBar = new JToolBar();
+		mainToolBar = new JToolBar();
 		mainToolBar.setFloatable(false);
 
-		JButton button = new JButton("Click me!");
+		JToggleButton  button = new JToggleButton("Draw");
 		mainToolBar.add(button);
+		button.addItemListener(this::drawButtonPressed);
+
 
 		JToolBar supplementaryToolBar = new JToolBar();
 		supplementaryToolBar.setFloatable(false);
@@ -37,8 +45,9 @@ public class MainForm extends JPanel {
 
 		BufferedImage image = loadDemoImage();
 
-		WorkingArea defaultTab = new WorkingArea(new SimplePaintableImage(image));
+		defaultTab = new WorkingArea(new SimplePaintableImage(image));
 		defaultTab.initialize();
+
 
 		JPanel anotherTab = new JPanel();
 		anotherTab.setBackground(Color.PINK);
@@ -64,4 +73,30 @@ public class MainForm extends JPanel {
 			throw new RuntimeException(e);
 		}
 	}
+
+	private void drawButtonPressed(ItemEvent e) {
+		if(defaultTab == null || mainToolBar == null) {
+			return;
+		}
+
+
+		DrawDialog drawDialog = new DrawDialog(Main.getMainFrame(), 600, 500);
+		Color col = drawDialog.getBrushColor();
+		int brushWidth = drawDialog.getBrushWidth();
+
+		WorkingTool brush = new Brush(brushWidth, col);
+		defaultTab.setTool(brush);
+
+
+	}
+
+
+	private Color setRGBAColor(int red, int green, int blue, double alpha) {
+		int alphaInt = (int)(alpha*255);
+		int argb = (alphaInt << 24) | (red << 16) | (green << 8) | blue;
+		return new Color(argb);
+	}
+
+
+
 }

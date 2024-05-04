@@ -9,6 +9,8 @@ import javax.swing.*;
 
 public class Main {
 
+	private static JFrame mainFrame;
+
 	public static void main(String[] args) {
 		new Main().run();
 	}
@@ -29,7 +31,7 @@ public class Main {
 		mainForm.initialize();
 
 
-		JFrame mainFrame = new JFrame("PixelLuxe");
+		mainFrame = new JFrame("PixelLuxe");
 		mainFrame.setJMenuBar(new TopLevelMenuBar().initialize());
 		mainFrame.setContentPane(mainForm);
 		mainFrame.setResizable(true);
@@ -37,6 +39,12 @@ public class Main {
 		mainFrame.setVisible(true);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		System.out.println("I hacked the program!");
+	}
+
+	/*
+		allows the user to get the mainFrame of the program
+	 */
+	public static JFrame getMainFrame() {
+		return mainFrame;
 	}
 }
