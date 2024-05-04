@@ -25,7 +25,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>src/</classpathPrefix>
-                            <mainClass>at.jku.pixelluxe.ui.Main</mainClass>
+                            <mainClass>at.jku.pixelluxe.ui.App</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

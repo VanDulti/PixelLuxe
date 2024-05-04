@@ -1,6 +1,7 @@
 package at.jku.pixelluxe.image;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Area;
 import java.awt.geom.QuadCurve2D;
@@ -10,7 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public record SimplePaintableImage(Image image) implements PaintableImage {
+public record SimplePaintableImage(BufferedImage image) implements PaintableImage {
 
 	@Override
 	public int getWidth() {

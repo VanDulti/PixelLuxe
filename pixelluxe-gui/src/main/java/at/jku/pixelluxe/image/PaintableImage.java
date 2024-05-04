@@ -1,6 +1,7 @@
 package at.jku.pixelluxe.image;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * Something to be painted inside {@link at.jku.pixelluxe.ui.WorkingArea}
@@ -10,7 +11,7 @@ public interface PaintableImage {
 
 	int getHeight();
 
-	Image image();
+	BufferedImage image();
 
 	void drawLine(int x1, int y1, int x2, int y2, Color color, int width);
 }
