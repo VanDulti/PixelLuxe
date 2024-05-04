@@ -8,6 +8,7 @@ import at.jku.pixelluxe.ui.menu.FileChooser;
 import at.jku.pixelluxe.ui.menu.FileMenu;
 import at.jku.pixelluxe.ui.menu.TabMenu;
 import at.jku.pixelluxe.ui.menu.TopLevelMenuBar;
+import com.formdev.flatlaf.FlatDarkLaf;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -27,6 +28,9 @@ public class App {
 	private final FileChooser fileChooser;
 	private final AtomicReference<Model> model = new AtomicReference<>(new Model(List.of()));
 	private int selectedImage = 0;
+
+	private static JFrame mainFrame;
+
 	private final Body body = new Body(
 			this::tabSelectionChanged
 	);
@@ -59,7 +63,13 @@ public class App {
 		menuBar.initialize();
 		body.initialize();
 
-		JFrame mainFrame = new JFrame("PixelLuxe");
+		try {
+			UIManager.setLookAndFeel(new FlatDarkLaf());
+		} catch (UnsupportedLookAndFeelException e) {
+			e.printStackTrace();
+		}
+
+		mainFrame = new JFrame("PixelLuxe");
 		mainFrame.setJMenuBar(menuBar);
 		mainFrame.setContentPane(body);
 		mainFrame.setResizable(true);
@@ -161,5 +171,9 @@ public class App {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public static JFrame getMainFrame() {
+		return mainFrame;
 	}
 }

@@ -1,11 +1,17 @@
 package at.jku.pixelluxe.ui;
 
 import at.jku.pixelluxe.image.ImageFile;
+import at.jku.pixelluxe.ui.dialog.DrawDialog;
 import at.jku.pixelluxe.ui.tabs.DefaultTab;
+import at.jku.pixelluxe.ui.tools.Brush;
+import at.jku.pixelluxe.ui.tools.WorkingTool;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
 import java.io.File;
 import java.util.function.Consumer;
 
@@ -29,8 +35,9 @@ public class Body extends JPanel {
 		JToolBar mainToolBar = new JToolBar();
 		mainToolBar.setFloatable(false);
 
-		JButton button = new JButton("Click me!");
+		JToggleButton  button = new JToggleButton("Draw");
 		mainToolBar.add(button);
+		button.addActionListener(this::drawButtonPressed);
 
 		JToolBar supplementaryToolBar = new JToolBar();
 		supplementaryToolBar.setFloatable(false);
@@ -68,4 +75,26 @@ public class Body extends JPanel {
 		int selected = tabPane.getSelectedIndex();
 		tabPane.removeTabAt(selected);
 	}
+
+	private void drawButtonPressed(ActionEvent e) {
+
+		int selectedIndex = tabPane.getSelectedIndex();
+        Component c = tabPane.getComponentAt(selectedIndex);
+		if(!(c instanceof WorkingArea workingArea)) {
+			return;
+		}
+
+		DrawDialog drawDialog = new DrawDialog(App.getMainFrame(), 600, 500);
+		Color col = drawDialog.getBrushColor();
+		int brushWidth = drawDialog.getBrushWidth();
+
+
+
+		WorkingTool brush = new Brush(brushWidth, col);
+		workingArea.setTool(brush);
+
+
+	}
+
+
 }

@@ -10,8 +10,8 @@ import java.awt.*;
 
 public class Brush implements WorkingTool {
 
-	private int width;
-	private Color color;
+	private final int width;
+	private final Color color;
 
 
 	public Brush(int width, Color color) {
@@ -21,7 +21,7 @@ public class Brush implements WorkingTool {
 
 	@Override
 	public void execute(PaintableImage image, int x1, int y1, int x2, int y2) {
-		image.drawLine(x1,y1,x2,y2,color,width);
+		image.drawLine(x1, y1, x2, y2, color, width);
 	}
 
 	@Override
