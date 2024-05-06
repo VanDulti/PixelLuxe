@@ -10,24 +10,18 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-/*
-	Brush class defines the properties of a brush
- */
+public class Eraser implements WorkingTool {
 
-public class Brush implements WorkingTool, Colorable {
+	private int widht;
 
-	private final int width;
-	private Color color;
 
-	public Brush(int width, Color color) {
-		this.color = color;
-		this.width = width;
+	public Eraser(int widht) {
+		this.widht = widht;
 	}
-
 
 	@Override
 	public void drag(PaintableImage image, int x1, int y1, int x2, int y2) {
-		image.drawLine(x1, y1, x2, y2, color, width);
+		image.eraseLine(x1,y1,x2,y2, widht);
 	}
 
 	@Override
@@ -40,25 +34,12 @@ public class Brush implements WorkingTool, Colorable {
 		return getClass().getName();
 	}
 
-	@Override
-	public Color getColor() {
-		return color;
-	}
-
-	@Override
-	public void setColor(Color color) {
-		this.color = color;
-	}
-
-
-	public static class BrushActionListener implements ActionListener {
+	public static class EraserActionListener implements ActionListener {
 
 		private final JTabbedPane tabPane;
-		private final ColorPicker colorPicker;
 
-		public BrushActionListener(JTabbedPane tabPane, ColorPicker colorPicker) {
+		public EraserActionListener(JTabbedPane tabPane) {
 			this.tabPane = tabPane;
-			this.colorPicker = colorPicker;
 		}
 
 		@Override
@@ -70,11 +51,10 @@ public class Brush implements WorkingTool, Colorable {
 			}
 
 			DrawDialog drawDialog = new DrawDialog(App.getMainFrame(), 200, 150);
-			int brushWidth = drawDialog.getBrushWidth();
-			Brush brush = new Brush(brushWidth, colorPicker.getColor());
-			workingArea.setTool(brush);
+			int eraserWidth = drawDialog.getBrushWidth();
+			Eraser eraser = new Eraser(eraserWidth);
+			workingArea.setTool(eraser);
 		}
 
 	}
-
 }

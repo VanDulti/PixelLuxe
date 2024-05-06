@@ -52,23 +52,19 @@ public class App {
 	}
 
 	public static void main(String[] args) {
+		FlatDarkLaf.setup();
 		new App().run();
 	}
 
 	public void run() {
+
 		SwingUtilities.invokeLater(this::initialize);
+
 	}
 
 	private void initialize() {
 		menuBar.initialize();
 		body.initialize();
-
-		try {
-			UIManager.setLookAndFeel(new FlatDarkLaf());
-		} catch (UnsupportedLookAndFeelException e) {
-			e.printStackTrace();
-		}
-
 		mainFrame = new JFrame("PixelLuxe");
 		mainFrame.setJMenuBar(menuBar);
 		mainFrame.setContentPane(body);
@@ -76,10 +72,7 @@ public class App {
 		mainFrame.setSize(mainFrame.getMaximumSize());
 		mainFrame.setVisible(true);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 		addSampleImage();
-
-		System.out.println("I hacked the program!");
 	}
 
 	private void addSampleImage() {

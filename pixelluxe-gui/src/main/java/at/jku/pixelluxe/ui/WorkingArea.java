@@ -3,6 +3,7 @@ package at.jku.pixelluxe.ui;
 import at.jku.pixelluxe.image.PaintableImage;
 import at.jku.pixelluxe.ui.tools.WorkingTool;
 
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -25,6 +26,8 @@ public class WorkingArea extends JPanel {
 	private double y = 0.0;
 	private double scale = 1.0;
 
+	private ToolListener toolListener;
+
 
 
 
@@ -42,7 +45,7 @@ public class WorkingArea extends JPanel {
 
 	public void addListeners() {
 		ImageDragListener imageDragListener = new ImageDragListener();
-		ToolListener toolListener = new ToolListener();
+		 toolListener= new ToolListener();
 
 		addMouseMotionListener(imageDragListener);
 		addMouseListener(imageDragListener);
@@ -150,9 +153,9 @@ public class WorkingArea extends JPanel {
 		Which will then be executed on mouse Events
 	 */
 	public void setTool(WorkingTool tool) {
-		ToolListener.setTool(tool);
+		toolListener.setTool(tool);
 	}
-
+	public WorkingTool getTool() { return toolListener.getTool();}
 
 	/*
 		ToolListener executes Tools on a certain Mouse Event
@@ -162,16 +165,20 @@ public class WorkingArea extends JPanel {
 		private Point initialPoint = null;
 
 		//All tools that will be executed are saved here
-		private static WorkingTool tool = null;
+		private WorkingTool tool = null;
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			if(initialPoint != null) {
+			if(initialPoint != null || tool == null) {
 				return;
 			}
-			System.out.println("Mouse pressed! Draw");
+
 			initialPoint = e.getPoint();
 
+			int x = getRelativeX(initialPoint);
+			int y = getRelativeY(initialPoint);
+
+			tool.set(image, x, y);
 		}
 
 		@Override
@@ -194,7 +201,7 @@ public class WorkingArea extends JPanel {
 			int endPosX = getRelativeX(currentPoint);
 			int endPosY = getRelativeY(currentPoint);
 
-			tool.execute(image,startPosX, startPosY, endPosX, endPosY);
+			tool.drag(image,startPosX, startPosY, endPosX, endPosY);
 
 			initialPoint = currentPoint;
 
@@ -208,8 +215,12 @@ public class WorkingArea extends JPanel {
 		private int getRelativeY(Point point) {
 			return (int)((point.y -y)/scale);
 		}
-		public static void setTool(WorkingTool toolee) {
+		public void setTool(WorkingTool toolee) {
 			tool= toolee;
+		}
+
+		public WorkingTool getTool() {
+			return tool;
 		}
 
 		private boolean isPaintKeyDown(MouseEvent e) {

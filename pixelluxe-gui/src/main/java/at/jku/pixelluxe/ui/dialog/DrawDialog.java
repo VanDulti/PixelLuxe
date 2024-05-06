@@ -14,13 +14,12 @@ import java.util.*;
 
 public class DrawDialog {
 	private int brushWidth;
-	private Color brushCol;
 
 	private JDialog dialog;
 
 	private JSlider slider;
 
-	private JColorChooser colorChooser;
+
 
 	public DrawDialog(JFrame frame,int width, int height) {
 		this.dialog = new JDialog(frame, "DrawDialog", true);
@@ -30,8 +29,7 @@ public class DrawDialog {
 
 	private void addComponents() {
 		createDrawSlider(1, 10, 1);
-		createDrawColerChooser("RGB");
-		createDrawSubmit("Submit");
+		createDialogButton("Submit");
 	}
 
 	private void createDrawSlider(int min, int max, int startValue) {
@@ -50,39 +48,23 @@ public class DrawDialog {
 		dialog.add(slider, BorderLayout.NORTH);
 	}
 
-
-	private void createDrawColerChooser(String chooserType) {
-		// Create a JColorChooser
-		 colorChooser = new JColorChooser();
-		AbstractColorChooserPanel[] panels = colorChooser.getChooserPanels();
-
-		for (AbstractColorChooserPanel panel : panels) {
-			// Check if this is not the RGB panel
-			if (!panel.getDisplayName().equals(chooserType)) {
-				// Remove the panel
-				colorChooser.removeChooserPanel(panel);
-			}
-		}
-
-		dialog.add(colorChooser, BorderLayout.CENTER);
-	}
-
-	private void createDrawSubmit(String label) {
+	private void createDialogButton(String label) {
 		// Create a Submit Button
 		JButton submitButton = new JButton(label);
-
 		submitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Save changes here
-				brushWidth = slider.getValue();
-				brushCol = colorChooser.getColor();
-				// Close the dialog
+
+				if(label.equals("Submit")) {
+					// Save changes here
+					brushWidth = slider.getValue();
+				}
+
+
 				dialog.dispose();
 			}
 		});
-		dialog.add(submitButton, BorderLayout.PAGE_END);
 
-
+		dialog.add(submitButton, BorderLayout.SOUTH);
 		// Sets the position in the middle of the screen
 		dialog.setLocationRelativeTo(null);
 
@@ -92,10 +74,4 @@ public class DrawDialog {
 	public int getBrushWidth() {
 		return brushWidth;
 	}
-
-	public Color getBrushColor() {
-		return brushCol;
-	}
-
-
 }
