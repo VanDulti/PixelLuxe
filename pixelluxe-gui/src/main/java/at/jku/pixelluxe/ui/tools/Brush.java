@@ -32,7 +32,6 @@ public class Brush implements WorkingTool, Colorable {
 
 	@Override
 	public void set(PaintableImage image, int x1, int y1) {
-		return;
 	}
 
 	@Override
@@ -65,7 +64,7 @@ public class Brush implements WorkingTool, Colorable {
 		public void actionPerformed(ActionEvent e) {
 			int selectedIndex = tabPane.getSelectedIndex();
 			Component c = tabPane.getComponentAt(selectedIndex);
-			if(!(c instanceof WorkingArea workingArea)) {
+			if (!(c instanceof WorkingArea workingArea)) {
 				return;
 			}
 

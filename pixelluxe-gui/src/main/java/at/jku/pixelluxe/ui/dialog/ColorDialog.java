@@ -6,14 +6,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ColorDialog { private int brushWidth;
+public class ColorDialog {
+	private final JDialog dialog;
 	private Color col;
-
-	private JDialog dialog;
-
 	private JColorChooser colorChooser;
 
-	public ColorDialog(JFrame frame,int width, int height) {
+	public ColorDialog(JFrame frame, int width, int height) {
 		this.dialog = new JDialog(frame, "ColorDialog", true);
 		dialog.setSize(width, height);
 		addComponents();
@@ -62,11 +60,10 @@ public class ColorDialog { private int brushWidth;
 	}
 
 	public Color getColor() {
-		if(col == null) {
+		if (col == null) {
 			return Color.WHITE;
 		}
 		return col;
 	}
-
 
 }

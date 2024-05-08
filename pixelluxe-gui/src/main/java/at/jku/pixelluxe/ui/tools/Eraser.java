@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
 
 public class Eraser implements WorkingTool {
 
-	private int widht;
+	private final int widht;
 
 
 	public Eraser(int widht) {
@@ -21,13 +21,12 @@ public class Eraser implements WorkingTool {
 
 	@Override
 	public void drag(PaintableImage image, int x1, int y1, int x2, int y2) {
-		image.eraseLine(x1,y1,x2,y2, widht);
+		image.eraseLine(x1, y1, x2, y2, widht);
 	}
 
 	@Override
 	public void set(PaintableImage image, int x1, int y1) {
-		return;
-	}
+    }
 
 	@Override
 	public String getToolName() {
@@ -46,7 +45,7 @@ public class Eraser implements WorkingTool {
 		public void actionPerformed(ActionEvent e) {
 			int selectedIndex = tabPane.getSelectedIndex();
 			Component c = tabPane.getComponentAt(selectedIndex);
-			if(!(c instanceof WorkingArea workingArea)) {
+			if (!(c instanceof WorkingArea workingArea)) {
 				return;
 			}
 

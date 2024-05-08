@@ -1,27 +1,23 @@
 package at.jku.pixelluxe.ui.dialog;
 
 import javax.swing.*;
-import javax.swing.colorchooser.AbstractColorChooserPanel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
+import java.util.Hashtable;
 
 
-/*
-	Defines the Dialog which pops up when the Draw Button is pressed
+/**
+ * Defines the Dialog which pops up when the Draw Button is pressed
  */
 
 public class DrawDialog {
+	private final JDialog dialog;
 	private int brushWidth;
-
-	private JDialog dialog;
-
 	private JSlider slider;
 
 
-
-	public DrawDialog(JFrame frame,int width, int height) {
+	public DrawDialog(JFrame frame, int width, int height) {
 		this.dialog = new JDialog(frame, "DrawDialog", true);
 		dialog.setSize(width, height);
 		addComponents();
@@ -36,7 +32,7 @@ public class DrawDialog {
 		slider = new JSlider(JSlider.HORIZONTAL, min, max, startValue);
 		//
 		Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
-		for(int i = slider.getMinimum(); i<=slider.getMaximum(); i++) {
+		for (int i = slider.getMinimum(); i <= slider.getMaximum(); i++) {
 			labelTable.put(i, new JLabel("" + i));
 		}
 		slider.setMajorTickSpacing(10);
@@ -54,7 +50,7 @@ public class DrawDialog {
 		submitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				if(label.equals("Submit")) {
+				if (label.equals("Submit")) {
 					// Save changes here
 					brushWidth = slider.getValue();
 				}
