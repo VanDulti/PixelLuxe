@@ -1,16 +1,23 @@
 package at.jku.pixelluxe.ui;
 
 import at.jku.pixelluxe.image.ImageFile;
+import at.jku.pixelluxe.ui.menu.ColorPane;
 import at.jku.pixelluxe.ui.tabs.DefaultTab;
+import at.jku.pixelluxe.ui.tools.Brush;
+import at.jku.pixelluxe.ui.tools.ColorPicker;
+import at.jku.pixelluxe.ui.tools.Eraser;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.function.Consumer;
 
 public class Body extends JPanel {
 	private final JTabbedPane tabPane;
+
+	private ColorPicker colorPicker = null;
 	private final Consumer<Integer> onTabSelectionChanged;
 	private final DefaultTab defaultTab = new DefaultTab();
 
@@ -20,17 +27,30 @@ public class Body extends JPanel {
 	}
 
 	public void initialize() {
+		colorPicker = new ColorPicker();
+
 		setLayout(new BorderLayout(16, 16));
 
 		JPanel toolbarPanel = new JPanel();
-
 		toolbarPanel.setLayout(new BorderLayout());
 
 		JToolBar mainToolBar = new JToolBar();
 		mainToolBar.setFloatable(false);
 
-		JButton button = new JButton("Click me!");
-		mainToolBar.add(button);
+		JButton drawBtn = new JButton("Draw");
+		mainToolBar.add(drawBtn);
+		drawBtn.addActionListener(new Brush.BrushActionListener(tabPane, colorPicker));
+
+		JButton eraseBtn = new JButton("Erase");
+		mainToolBar.add(eraseBtn);
+		eraseBtn.addActionListener(new Eraser.EraserActionListener(tabPane));
+
+		ColorPane colorPane = new ColorPane();
+		colorPane.addTo(mainToolBar);
+		colorPane.getComponent().addActionListener(new ColorPicker.ColorPaneListener(
+				tabPane,
+				colorPicker,
+				colorPane));
 
 		JToolBar supplementaryToolBar = new JToolBar();
 		supplementaryToolBar.setFloatable(false);
@@ -54,9 +74,7 @@ public class Body extends JPanel {
 	}
 
 	public void addImage(ImageFile imageFile) {
-		String title = imageFile.backingFile()
-				.map(File::getName)
-				.orElse("[Untitled]");
+		String title = imageFile.backingFile().map(File::getName).orElse("[Untitled]");
 		WorkingArea workingArea = new WorkingArea(imageFile.image());
 		int tabCount = tabPane.getTabCount();
 		tabPane.insertTab(title, null, workingArea, title, tabCount);
@@ -68,4 +86,9 @@ public class Body extends JPanel {
 		int selected = tabPane.getSelectedIndex();
 		tabPane.removeTabAt(selected);
 	}
+
+	private void colorPanePressed(ActionEvent e) {
+
+	}
+
 }

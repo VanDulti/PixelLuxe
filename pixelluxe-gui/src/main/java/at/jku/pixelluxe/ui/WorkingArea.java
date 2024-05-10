@@ -1,6 +1,7 @@
 package at.jku.pixelluxe.ui;
 
 import at.jku.pixelluxe.image.PaintableImage;
+import at.jku.pixelluxe.ui.tools.WorkingTool;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,6 +9,8 @@ import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 
 public class WorkingArea extends JPanel {
+
+
 	public static final double MIN_FRAMES_PER_SECOND = 30.0;
 	public static final long MIN_FRAME_TIME_MILLIS = (long) (1000.0 / MIN_FRAMES_PER_SECOND);
 	private static final int MINIMAL_VISIBLE_SPACE = 10;
@@ -22,8 +25,20 @@ public class WorkingArea extends JPanel {
 	private double y = 0.0;
 	private double scale = 1.0;
 
+	private ToolListener toolListener;
+
+
 	public WorkingArea(PaintableImage image) {
 		this.image = image;
+		setDoubleBuffered(true);
+
+	}
+
+	private static void setPixelGridRenderingHints(Graphics2D g2d) {
+		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
+		g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_SPEED);
 	}
 
 	public void initialize() {
@@ -34,13 +49,13 @@ public class WorkingArea extends JPanel {
 
 	public void addListeners() {
 		ImageDragListener imageDragListener = new ImageDragListener();
-		ImagePaintListener imagePaintListener = new ImagePaintListener();
+		toolListener = new ToolListener();
 
 		addMouseMotionListener(imageDragListener);
 		addMouseListener(imageDragListener);
 
-		addMouseMotionListener(imagePaintListener);
-		addMouseListener(imagePaintListener);
+		addMouseMotionListener(toolListener);
+		addMouseListener(toolListener);
 
 		addMouseWheelListener(new MouseWheelListener());
 
@@ -70,13 +85,6 @@ public class WorkingArea extends JPanel {
 			// kinda ugly tho
 			drawPixelGrid(g2d);
 		}
-	}
-
-	private static void setPixelGridRenderingHints(Graphics2D g2d) {
-		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
-		g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_SPEED);
 	}
 
 	/**
@@ -121,6 +129,18 @@ public class WorkingArea extends JPanel {
 		}
 	}
 
+	public WorkingTool getTool() {
+		return toolListener.getTool();
+	}
+
+	/*
+		Is the Mehtod for other Classes primarly Working Area to set the Tools  the user selected
+		Which will then be executed on mouse Events
+	 */
+	public void setTool(WorkingTool tool) {
+		toolListener.setTool(tool);
+	}
+
 	private static class KeyListener extends KeyAdapter {
 		@Override
 		public void keyReleased(KeyEvent e) {
@@ -137,34 +157,71 @@ public class WorkingArea extends JPanel {
 		}
 	}
 
-	private class ImagePaintListener extends MouseAdapter {
+	/*
+		ToolListener executes Tools on a certain Mouse Event
+		Tools are executed with tool.execute() for example Brush Tool
+	 */
+	private class ToolListener extends MouseAdapter {
 		private Point initialPoint = null;
+
+		//All tools that will be executed are saved here
+		private WorkingTool tool = null;
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			System.out.println("Mouse pressed!");
+			if (initialPoint != null || tool == null) {
+				return;
+			}
+
 			initialPoint = e.getPoint();
+
+			int x = getRelativeX(initialPoint);
+			int y = getRelativeY(initialPoint);
+
+			tool.set(image, x, y);
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			System.out.println("Mouse released!");
 			initialPoint = null;
 		}
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
-			System.out.println("image paint mouseDragged");
-			if (initialPoint == null) {
+
+			if (initialPoint == null || tool == null) {
 				return;
 			}
-			if (!isPaintKeyDown(e)) {
-				return;
-			}
+
 			Point currentPoint = e.getPoint();
-			image.drawLine(initialPoint.x, initialPoint.y, currentPoint.x, currentPoint.y, Color.black);
+
+			int startPosX = getRelativeX(initialPoint);
+			int startPosY = getRelativeY(initialPoint);
+
+			int endPosX = getRelativeX(currentPoint);
+			int endPosY = getRelativeY(currentPoint);
+
+			tool.drag(image, startPosX, startPosY, endPosX, endPosY);
+
 			initialPoint = currentPoint;
+
 			render();
+		}
+
+		private int getRelativeX(Point point) {
+			return (int) ((point.x - x) / scale);
+		}
+
+		private int getRelativeY(Point point) {
+			return (int) ((point.y - y) / scale);
+		}
+
+		public WorkingTool getTool() {
+			return tool;
+		}
+
+		public void setTool(WorkingTool toolee) {
+			tool = toolee;
 		}
 
 		private boolean isPaintKeyDown(MouseEvent e) {
@@ -175,21 +232,22 @@ public class WorkingArea extends JPanel {
 	private class ImageDragListener extends MouseAdapter {
 		private Point initialPoint = null;
 
+		private static boolean isDragKeyDown(MouseEvent e) {
+			return e.isControlDown();
+		}
+
 		@Override
 		public void mousePressed(MouseEvent e) {
-			System.out.println("Mouse pressed!");
 			initialPoint = e.getPoint();
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			System.out.println("Mouse released!");
 			initialPoint = null;
 		}
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
-			System.out.println("Mouse dragged!");
 			if (initialPoint == null) {
 				return;
 			}
@@ -202,11 +260,9 @@ public class WorkingArea extends JPanel {
 			restrictBounds();
 
 			initialPoint = currentPoint;
-			render();
-		}
+			new Rectangle();
 
-		private static boolean isDragKeyDown(MouseEvent e) {
-			return e.isControlDown();
+			render();
 		}
 
 
@@ -215,6 +271,14 @@ public class WorkingArea extends JPanel {
 	private class MouseWheelListener extends MouseAdapter {
 		private static final double MIN_SCALE = 0.1;
 		private static final double MAX_SCALE = 30.0;
+
+		private static boolean isZoomKeyDown(MouseWheelEvent e) {
+			return e.isAltDown();
+		}
+
+		private static boolean isHorizontalTranslationKeyDown(MouseWheelEvent e) {
+			return e.isShiftDown();
+		}
 
 		@Override
 		public void mouseWheelMoved(MouseWheelEvent e) {
@@ -235,14 +299,6 @@ public class WorkingArea extends JPanel {
 			restrictBounds();
 			render();
 			System.out.println("Mouse wheel moved!");
-		}
-
-		private static boolean isZoomKeyDown(MouseWheelEvent e) {
-			return e.isAltDown();
-		}
-
-		private static boolean isHorizontalTranslationKeyDown(MouseWheelEvent e) {
-			return e.isShiftDown();
 		}
 	}
 }

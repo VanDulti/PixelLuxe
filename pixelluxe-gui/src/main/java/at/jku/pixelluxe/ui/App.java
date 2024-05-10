@@ -8,6 +8,7 @@ import at.jku.pixelluxe.ui.menu.FileChooser;
 import at.jku.pixelluxe.ui.menu.FileMenu;
 import at.jku.pixelluxe.ui.menu.TabMenu;
 import at.jku.pixelluxe.ui.menu.TopLevelMenuBar;
+import com.formdev.flatlaf.FlatDarkLaf;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -27,6 +28,9 @@ public class App {
 	private final FileChooser fileChooser;
 	private final AtomicReference<Model> model = new AtomicReference<>(new Model(List.of()));
 	private int selectedImage = 0;
+
+	private static JFrame mainFrame;
+
 	private final Body body = new Body(
 			this::tabSelectionChanged
 	);
@@ -48,28 +52,27 @@ public class App {
 	}
 
 	public static void main(String[] args) {
+		FlatDarkLaf.setup();
 		new App().run();
 	}
 
 	public void run() {
+
 		SwingUtilities.invokeLater(this::initialize);
+
 	}
 
 	private void initialize() {
 		menuBar.initialize();
 		body.initialize();
-
-		JFrame mainFrame = new JFrame("PixelLuxe");
+		mainFrame = new JFrame("PixelLuxe");
 		mainFrame.setJMenuBar(menuBar);
 		mainFrame.setContentPane(body);
 		mainFrame.setResizable(true);
 		mainFrame.setSize(mainFrame.getMaximumSize());
 		mainFrame.setVisible(true);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 		addSampleImage();
-
-		System.out.println("I hacked the program!");
 	}
 
 	private void addSampleImage() {
@@ -161,5 +164,9 @@ public class App {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public static JFrame getMainFrame() {
+		return mainFrame;
 	}
 }
