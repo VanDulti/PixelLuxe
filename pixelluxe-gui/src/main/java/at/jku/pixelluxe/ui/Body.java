@@ -1,6 +1,7 @@
 package at.jku.pixelluxe.ui;
 
 import at.jku.pixelluxe.image.ImageFile;
+import at.jku.pixelluxe.image.PaintableImage;
 import at.jku.pixelluxe.ui.menu.ColorPane;
 import at.jku.pixelluxe.ui.tabs.DefaultTab;
 import at.jku.pixelluxe.ui.tools.Brush;
@@ -16,7 +17,6 @@ import java.util.function.Consumer;
 
 public class Body extends JPanel {
 	private final JTabbedPane tabPane;
-
 	private ColorPicker colorPicker = null;
 	private final Consumer<Integer> onTabSelectionChanged;
 	private final DefaultTab defaultTab = new DefaultTab();
@@ -76,6 +76,17 @@ public class Body extends JPanel {
 	public void addImage(ImageFile imageFile) {
 		String title = imageFile.backingFile().map(File::getName).orElse("[Untitled]");
 		WorkingArea workingArea = new WorkingArea(imageFile.image());
+		int tabCount = tabPane.getTabCount();
+		tabPane.insertTab(title, null, workingArea, title, tabCount);
+		tabPane.setSelectedIndex(tabCount);
+		workingArea.initialize();
+	}
+
+	public void updateImage(PaintableImage paintableImage) {
+		int selected = tabPane.getSelectedIndex();
+		String title = tabPane.getTitleAt(selected);
+		WorkingArea workingArea = new WorkingArea(paintableImage);
+		tabPane.removeTabAt(selected);
 		int tabCount = tabPane.getTabCount();
 		tabPane.insertTab(title, null, workingArea, title, tabCount);
 		tabPane.setSelectedIndex(tabCount);

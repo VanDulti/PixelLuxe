@@ -5,8 +5,6 @@ import java.awt.image.BufferedImage;
 
 public record SimplePaintableImage(BufferedImage image) implements PaintableImage {
 
-	private static final Graphics2D prev = null;
-
 	@Override
 	public int getWidth() {
 		return image.getWidth(null);
