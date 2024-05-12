@@ -1,12 +1,14 @@
 package at.jku.pixelluxe.ui;
 
 import at.jku.pixelluxe.image.PaintableImage;
+import at.jku.pixelluxe.image.SimplePaintableImage;
 import at.jku.pixelluxe.ui.tools.WorkingTool;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 
 public class WorkingArea extends JPanel {
 
@@ -20,7 +22,7 @@ public class WorkingArea extends JPanel {
 	 * image, filters, layers, raw painting) as this is supposed to be more efficient than drawing directly on the
 	 * JPanel.
 	 */
-	private final PaintableImage image;
+	private PaintableImage image;
 	private double x = 0.0;
 	private double y = 0.0;
 	private double scale = 1.0;
@@ -31,7 +33,6 @@ public class WorkingArea extends JPanel {
 	public WorkingArea(PaintableImage image) {
 		this.image = image;
 		setDoubleBuffered(true);
-
 	}
 
 	private static void setPixelGridRenderingHints(Graphics2D g2d) {
@@ -39,6 +40,15 @@ public class WorkingArea extends JPanel {
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
 		g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_SPEED);
+	}
+
+	public BufferedImage getImage() {
+		return image.image();
+	}
+
+	public void setImage(BufferedImage image) {
+		this.image = new SimplePaintableImage(image);
+		render();
 	}
 
 	public void initialize() {

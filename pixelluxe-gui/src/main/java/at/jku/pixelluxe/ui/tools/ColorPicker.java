@@ -45,11 +45,11 @@ public class ColorPicker implements WorkingTool, Colorable {
 
 	public static class ColorPaneListener implements ActionListener {
 
-		private JTabbedPane tabPane;
+		private final JTabbedPane tabPane;
 
-		private ColorPicker colPicker;
+		private final ColorPicker colPicker;
 
-		private ColorPane colPane;
+		private final ColorPane colPane;
 
 		public ColorPaneListener(JTabbedPane tabPane, ColorPicker colPicker, ColorPane colPane) {
 			this.tabPane = tabPane;

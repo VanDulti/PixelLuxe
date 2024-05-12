@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class ColorPane {
 
-	private JButton toplevelComp;
+	private final JButton toplevelComp;
 
 	public ColorPane() {
 

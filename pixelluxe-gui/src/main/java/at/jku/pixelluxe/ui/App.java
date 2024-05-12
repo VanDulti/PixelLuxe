@@ -1,18 +1,20 @@
 package at.jku.pixelluxe.ui;
 
+import at.jku.pixelluxe.filter.Filter;
+import at.jku.pixelluxe.filter.convolution.Convolution;
+import at.jku.pixelluxe.filter.convolution.Kernels;
 import at.jku.pixelluxe.image.ImageFile;
 import at.jku.pixelluxe.image.Model;
 import at.jku.pixelluxe.image.PaintableImage;
 import at.jku.pixelluxe.image.SimplePaintableImage;
-import at.jku.pixelluxe.ui.menu.FileChooser;
-import at.jku.pixelluxe.ui.menu.FileMenu;
-import at.jku.pixelluxe.ui.menu.TabMenu;
-import at.jku.pixelluxe.ui.menu.TopLevelMenuBar;
+import at.jku.pixelluxe.ui.dialog.IntesityDialog;
+import at.jku.pixelluxe.ui.menu.*;
 import com.formdev.flatlaf.FlatDarkLaf;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +42,12 @@ public class App {
 					this::onSavePressed,
 					this::onSaveAsPressed
 			),
-			new TabMenu(this::onTabClose)
+			new TabMenu(this::onTabClose),
+			new FilterMenu(
+					this::onInvertPressed,
+					this::onContrastPressed,
+					this::onSaturationPressed,
+					this::onConvolutionPressed)
 	);
 
 	public App() {
@@ -69,7 +76,8 @@ public class App {
 		mainFrame.setJMenuBar(menuBar);
 		mainFrame.setContentPane(body);
 		mainFrame.setResizable(true);
-		mainFrame.setSize(mainFrame.getMaximumSize());
+		//mainFrame.setSize(mainFrame.getMaximumSize());
+		mainFrame.setSize(new Dimension(1920, 1080));
 		mainFrame.setVisible(true);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		addSampleImage();
@@ -164,6 +172,49 @@ public class App {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	//Filters
+
+	private void onConvolutionPressed() {
+		Model model = this.model.get();
+		BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.YSOBEL);
+		updatePaintable(new SimplePaintableImage(bi));
+	}
+
+	private void onSaturationPressed() {
+		int intensity = getIntensity();
+		Model model = this.model.get();
+		BufferedImage bi = new Filter().saturation(model.imageFiles().get(selectedImage).image().image(), intensity);
+		updatePaintable(new SimplePaintableImage(bi));
+	}
+
+	private void onContrastPressed() {
+		int intensity = getIntensity();
+		Model model = this.model.get();
+		BufferedImage bi = new Filter().contrast(model.imageFiles().get(selectedImage).image().image(), intensity);
+		updatePaintable(new SimplePaintableImage(bi));
+	}
+
+	private void onInvertPressed() {
+		Model model = this.model.get();
+		BufferedImage bi = new Filter().invert(model.imageFiles().get(selectedImage).image().image());
+		updatePaintable(new SimplePaintableImage(bi));
+	}
+
+	private void updatePaintable(PaintableImage paintableImage) {
+		body.updateImage(paintableImage);
+		this.model.updateAndGet(newmodel -> {
+			int selectedImage = this.selectedImage;
+			if (selectedImage < 0 || selectedImage >= newmodel.imageFiles().size()) {
+				return newmodel;
+			}
+			return newmodel.with(selectedImage, new ImageFile(paintableImage, newmodel.imageFiles().get(selectedImage).backingFile()));
+		});
+	}
+
+	private int getIntensity() {
+		return new IntesityDialog(App.getMainFrame(), 200, 150).getIntesity();
 	}
 
 	public static JFrame getMainFrame() {
