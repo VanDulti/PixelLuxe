@@ -9,7 +9,7 @@ import at.jku.pixelluxe.image.PaintableImage;
 import at.jku.pixelluxe.image.SimplePaintableImage;
 import at.jku.pixelluxe.ui.dialog.IntesityDialog;
 import at.jku.pixelluxe.ui.menu.*;
-import com.formdev.flatlaf.FlatDarkLaf;
+
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
