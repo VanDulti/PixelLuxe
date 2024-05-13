@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Logger;
 
 public class App {
 	private static final String[] READER_FILE_SUFFIXES = ImageIO.getReaderFileSuffixes();
@@ -59,7 +60,11 @@ public class App {
 	}
 
 	public static void main(String[] args) {
-		FlatDarkLaf.setup();
+		try {
+			UIManager.setLookAndFeel(new FlatDarkLaf());
+		} catch (UnsupportedLookAndFeelException e) {
+			Logger.getGlobal().warning("Failed to set look and feel");
+		}
 		new App().run();
 	}
 
