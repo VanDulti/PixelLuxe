@@ -10,7 +10,6 @@ import at.jku.pixelluxe.image.SimplePaintableImage;
 import at.jku.pixelluxe.ui.dialog.IntesityDialog;
 import at.jku.pixelluxe.ui.menu.*;
 
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -23,7 +22,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Logger;
 
 public class App {
 	private static final String[] READER_FILE_SUFFIXES = ImageIO.getReaderFileSuffixes();
@@ -59,14 +57,8 @@ public class App {
 		);
 	}
 
-	public static void main(String[] args) {
-		new App().run();
-	}
-
 	public void run() {
-
 		SwingUtilities.invokeLater(this::initialize);
-
 	}
 
 	private void initialize() {
