@@ -56,12 +56,9 @@ jobs:
       uses: actions/github-script@v5
       with:
         script: |
-          get_latest_release() {
-            curl --silent "https://api.github.com/repos/$1/releases/latest" |
-            grep '"tag_name":' |                                            
-            sed -E 's/.*"([^"]+)".*/\1/'                                    
-          }
-          return get_latest_release "RaphiMC/JavaDowngrader"
+          return curl --silent "https://api.github.com/repos/RaphiMC/JavaDowngrader/releases/latest" |
+          grep '"tag_name":' |                                            
+          sed -E 's/.*"([^"]+)".*/\1/'
     - name: Download and run Java Downgrader
       run: |
         wget -q https://github.com/RaphiMC/JavaDowngrader/releases/download/${{ steps.latest_release.outputs.result }}/JavaDowngrader.jar
