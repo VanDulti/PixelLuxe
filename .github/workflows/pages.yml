@@ -36,27 +36,42 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pixelluxe-gui/pom.xml
-    
+
   build-java-8:
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
-    - name: Set up JDK 8
+    - name: Set up JDK 21
       uses: actions/setup-java@v3
       with:
-        java-version: '8'
+        java-version: '21'
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pixelluxe-gui/pom.xml
-    - run: mkdir staging && cp pixelluxe-gui/target/*.jar staging
+    - name: Get latest release of Java Downgrader
+      id: latest_release
+      uses: actions/github-script@v5
+      with:
+        script: |
+          const repo = await github.repos.get({
+            owner: 'RaphiMC',
+            repo: 'JavaDowngrader',
+          });
+          return repo.data.default_branch;
+    - name: Download and run Java Downgrader
+      run: |
+        wget -q https://github.com/RaphiMC/JavaDowngrader/releases/download/${{ steps.latest_release.outputs.result }}/JavaDowngrader.jar
+        java -jar JavaDowngrader.jar -input pixelluxe-gui/target/*.jar -output pixelluxe-gui/target/pixelluxe-gui-java8.jar -version 8
+    - run: mkdir staging && cp pixelluxe-gui/target/java-8.jar staging
     - name: Upload jar file
       uses: actions/upload-artifact@v3
       with:
         name: java-package
         path: staging
+
   build-web:
     runs-on: ubuntu-latest
     steps:
