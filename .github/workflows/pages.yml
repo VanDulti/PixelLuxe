@@ -54,7 +54,7 @@ jobs:
     - name: Download and run Java Downgrader
       run: |
         wget -q https://github.com/RaphiMC/JavaDowngrader/releases/download/v1.1.2/JavaDowngrader-Standalone-1.1.2.jar
-        java -jar JavaDowngrader.jar -input pixelluxe-gui/target/*.jar -output pixelluxe-gui/target/pixelluxe-gui-java8.jar -version 8
+        java -jar JavaDowngrader-Standalone-1.1.2.jar -input pixelluxe-gui/target/*.jar -output pixelluxe-gui/target/pixelluxe-gui-java8.jar -version 8
     - run: mkdir staging && cp pixelluxe-gui/target/java-8.jar staging
     - name: Upload jar file
       uses: actions/upload-artifact@v3
