@@ -51,14 +51,9 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pixelluxe-gui/pom.xml
-    - name: Get latest release of Java Downgrader
-      id: latest_release
-      run: |
-        result=$(curl --silent "https://api.github.com/repos/RaphiMC/JavaDowngrader/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
-        echo "::set-output name=result::$result"
     - name: Download and run Java Downgrader
       run: |
-        wget -q https://github.com/RaphiMC/JavaDowngrader/releases/download/${{ steps.latest_release.outputs.result }}/JavaDowngrader.jar
+        wget -q https://github.com/RaphiMC/JavaDowngrader/releases/download/v1.1.2/JavaDowngrader-Standalone-1.1.2.jar
         java -jar JavaDowngrader.jar -input pixelluxe-gui/target/*.jar -output pixelluxe-gui/target/pixelluxe-gui-java8.jar -version 8
     - run: mkdir staging && cp pixelluxe-gui/target/java-8.jar staging
     - name: Upload jar file
