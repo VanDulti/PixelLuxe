@@ -46,7 +46,21 @@ public class App {
 					this::onInvertPressed,
 					this::onContrastPressed,
 					this::onSaturationPressed,
-					this::onConvolutionPressed)
+					this::onConvolutionPressed
+			),
+			new EdgeDetectionMenu(
+					this::onXEdgePressed,
+					this::onYEdgePressed,
+					this::onXSobelPressed,
+					this::onYSobelPressed,
+					this::onLaplacePressed
+			),
+			new BlurSharpenMenu(
+					this::onSharpenPressed,
+					this::onGaussPressed,
+					this::onMeanBlurPressed
+			)
+
 	);
 
 	public App() {
@@ -170,7 +184,7 @@ public class App {
 
 	private void onConvolutionPressed() {
 		Model model = this.model.get();
-		BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.YSOBEL);
+		BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.ySobel);
 		updatePaintable(new SimplePaintableImage(bi));
 	}
 
@@ -191,6 +205,54 @@ public class App {
 	private void onInvertPressed() {
 		Model model = this.model.get();
 		BufferedImage bi = new Filter().invert(model.imageFiles().get(selectedImage).image().image());
+		updatePaintable(new SimplePaintableImage(bi));
+	}
+
+	private void onXEdgePressed() {
+		Model model = this.model.get();
+		BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.xEdge);
+		updatePaintable(new SimplePaintableImage(bi));
+	}
+
+	private void onYEdgePressed() {
+		Model model = this.model.get();
+		BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.yEdge);
+		updatePaintable(new SimplePaintableImage(bi));
+	}
+
+	private void onXSobelPressed() {
+		Model model = this.model.get();
+		BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.xSobel);
+		updatePaintable(new SimplePaintableImage(bi));
+	}
+
+	private void onYSobelPressed() {
+		Model model = this.model.get();
+		BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.ySobel);
+		updatePaintable(new SimplePaintableImage(bi));
+	}
+
+	private void onLaplacePressed() {
+		Model model = this.model.get();
+		BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.laplace);
+		updatePaintable(new SimplePaintableImage(bi));
+	}
+
+	private void onSharpenPressed() {
+		Model model = this.model.get();
+		BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.sharpen);
+		updatePaintable(new SimplePaintableImage(bi));
+	}
+
+	private void onGaussPressed() {
+		Model model = this.model.get();
+		BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.gauss);
+		updatePaintable(new SimplePaintableImage(bi));
+	}
+
+	private void onMeanBlurPressed() {
+		Model model = this.model.get();
+		BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.meanBlur);
 		updatePaintable(new SimplePaintableImage(bi));
 	}
 
