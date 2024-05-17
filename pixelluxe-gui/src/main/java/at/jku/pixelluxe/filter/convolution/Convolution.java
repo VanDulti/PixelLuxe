@@ -5,9 +5,8 @@ import java.awt.image.BufferedImage;
 
 public class Convolution {
 
-	//TODO create/try params for factor and kernel size/content
-	//	   Dropdown Menu for different kernels
-	//     Slider for factor (ez) and intensity of kernel effect (hard)
+	//TODO BUG: filtering adds black pixels to the bottom and RHS of picture
+	//			shifts the picture to the top left
 
 	public BufferedImage filter(Image image, Kernel kernel) {
 		int[][] KERNEL = kernel.getMatrix();

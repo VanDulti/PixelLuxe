@@ -1,7 +1,7 @@
 package at.jku.pixelluxe.filter.convolution;
 
 public class Kernels {
-	public static final Kernel SHARPEN = new Kernel(
+	public static final Kernel sharpen = new Kernel(
 			new int[][]{
 					{0, -1, 0},
 					{-1, 5, -1},
@@ -9,7 +9,7 @@ public class Kernels {
 			}, 1, "sharp"
 	);
 
-	public static final Kernel XEDGE = new Kernel(
+	public static final Kernel xEdge = new Kernel(
 			new int[][]{
 					{-1, 0, 1},
 					{-1, 0, 1},
@@ -17,7 +17,7 @@ public class Kernels {
 			}, 1, "edge"
 	);
 
-	public static final Kernel YEDGE = new Kernel(
+	public static final Kernel yEdge = new Kernel(
 			new int[][]{
 					{-1, -1, -1},
 					{0, 0, 0},
@@ -25,7 +25,7 @@ public class Kernels {
 			}, 1, "edge"
 	);
 
-	public static final Kernel LAPLACE = new Kernel(
+	public static final Kernel laplace = new Kernel(
 			new int[][]{
 					{0, 1, 0},
 					{1, -4, 1},
@@ -33,7 +33,7 @@ public class Kernels {
 			}, 1, "edge"
 	);
 
-	public static final Kernel GAUSS = new Kernel(
+	public static final Kernel gauss = new Kernel(
 			new int[][]{
 					{1, 2, 1},
 					{2, 4, 2},
@@ -41,7 +41,7 @@ public class Kernels {
 			}, 16, "blur"
 	);
 
-	public static final Kernel MEANBLUR = new Kernel(
+	public static final Kernel meanBlur = new Kernel(
 			new int[][]{
 					{1, 1, 1},
 					{1, 1, 1},
@@ -49,7 +49,7 @@ public class Kernels {
 			}, 9, "blur"
 	);
 
-	public static final Kernel XSOBEL = new Kernel(
+	public static final Kernel xSobel = new Kernel(
 			new int[][]{
 					{-1, -2, -1},
 					{0, 0, 0},
@@ -57,7 +57,7 @@ public class Kernels {
 			}, 1, "edge"
 	);
 
-	public static final Kernel YSOBEL = new Kernel(
+	public static final Kernel ySobel = new Kernel(
 			new int[][]{
 					{-1, 0, 1},
 					{-2, 0, 2},
