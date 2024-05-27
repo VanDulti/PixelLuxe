@@ -1,6 +1,6 @@
 package at.jku.pixelluxe.filter.convolution;
 
-class Kernel {
+public class Kernel {
 	private final String type;
 	private final int[][] matrix;
 	private final int factor;
