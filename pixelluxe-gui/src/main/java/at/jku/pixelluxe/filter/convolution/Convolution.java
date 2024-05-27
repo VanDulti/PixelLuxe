@@ -58,16 +58,6 @@ public class Convolution {
 		return filtered;
 	}
 
-	// --------------- helper methods---------------------
-	// creates 32bit RGBA integer from 4 channels
-	private int genRGB(int R, int G, int B) {
-		R = Math.max(0, Math.min(R, 255));
-		G = Math.max(0, Math.min(G, 255));
-		B = Math.max(0, Math.min(B, 255));
-
-		return (255 << 24) | (R << 16) | (G << 8) | B;
-	}
-
 	// converts image to BufferedImage of size: width, height += 2*Padding
 	private BufferedImage convertType(Image image, Kernel kernel) {
 		int PAD = (kernel.getMatrix().length - 1) / 2;
@@ -79,6 +69,24 @@ public class Convolution {
 		g2d.drawImage(image, PAD, PAD, null);
 		g2d.dispose();
 
+		return bi;
+	}
+
+	private BufferedImage convertTypeToGrayScale(BufferedImage bi) {
+		int w = bi.getWidth();
+		int h = bi.getHeight();
+
+		for (int i = 0; i < w; i++) {
+			for (int j = 0; j < h; j++) {
+				int RGB = bi.getRGB(i, j);
+				int R = (RGB >> 16) & 0xFF;
+				int G = (RGB >> 8) & 0xFF;
+				int B = RGB & 0xFF;
+
+				int gray = (R + G + B) / 3;
+				bi.setRGB(i, j, genRGB(gray, gray, gray));
+			}
+		}
 		return bi;
 	}
 
@@ -141,21 +149,13 @@ public class Convolution {
 		}
 	}
 
-	private BufferedImage convertTypeToGrayScale(BufferedImage bi) {
-		int w = bi.getWidth();
-		int h = bi.getHeight();
+	// --------------- helper methods---------------------
+	// creates 32bit RGBA integer from 4 channels
+	private int genRGB(int R, int G, int B) {
+		R = Math.max(0, Math.min(R, 255));
+		G = Math.max(0, Math.min(G, 255));
+		B = Math.max(0, Math.min(B, 255));
 
-		for (int i = 0; i < w; i++) {
-			for (int j = 0; j < h; j++) {
-				int RGB = bi.getRGB(i, j);
-				int R = (RGB >> 16) & 0xFF;
-				int G = (RGB >> 8) & 0xFF;
-				int B = RGB & 0xFF;
-
-				int gray = (R + G + B) / 3;
-				bi.setRGB(i, j, genRGB(gray, gray, gray));
-			}
-		}
-		return bi;
+		return (255 << 24) | (R << 16) | (G << 8) | B;
 	}
 }
