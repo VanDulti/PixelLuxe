@@ -2,6 +2,7 @@ package at.jku.pixelluxe.ui;
 
 import at.jku.pixelluxe.image.PaintableImage;
 import at.jku.pixelluxe.image.SimplePaintableImage;
+import at.jku.pixelluxe.ui.tools.History;
 import at.jku.pixelluxe.ui.tools.WorkingTool;
 
 import javax.swing.*;
@@ -23,12 +24,13 @@ public class WorkingArea extends JPanel {
 	 * JPanel.
 	 */
 	private PaintableImage image;
+	private PaintableImage imageSnapshot;
+	private History historyObj;
 	private double x = 0.0;
 	private double y = 0.0;
 	private double scale = 1.0;
 
 	private ToolListener toolListener;
-
 
 	public WorkingArea(PaintableImage image) {
 		this.image = image;
@@ -54,6 +56,7 @@ public class WorkingArea extends JPanel {
 	public void initialize() {
 		setLayout(null);
 		setBackground(Color.LIGHT_GRAY);
+		historyObj = new History(100);
 		addListeners();
 	}
 
@@ -61,14 +64,17 @@ public class WorkingArea extends JPanel {
 		ImageDragListener imageDragListener = new ImageDragListener();
 		toolListener = new ToolListener();
 
+
 		addMouseMotionListener(imageDragListener);
 		addMouseListener(imageDragListener);
 
 		addMouseMotionListener(toolListener);
 		addMouseListener(toolListener);
 
-		addMouseWheelListener(new MouseWheelListener());
 
+		requestFocusInWindow();
+
+		addMouseWheelListener(new MouseWheelListener());
 		addComponentListener(new ComponentListener());
 		addKeyListener(new KeyListener());
 	}
@@ -95,6 +101,14 @@ public class WorkingArea extends JPanel {
 			// kinda ugly tho
 			drawPixelGrid(g2d);
 		}
+
+		takeSnapShot();
+	}
+
+	public void takeSnapShot() {
+		System.out.println("Take Snapshot");
+		imageSnapshot = image.cloneImage();
+		historyObj.add(imageSnapshot);
 	}
 
 	/**
@@ -151,11 +165,28 @@ public class WorkingArea extends JPanel {
 		toolListener.setTool(tool);
 	}
 
-	private static class KeyListener extends KeyAdapter {
+	private class KeyListener extends KeyAdapter {
 		@Override
 		public void keyReleased(KeyEvent e) {
-			System.out.println("Key released!");
+
 		}
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			if(e.isControlDown() &&  e.getKeyCode()==90) {
+				PaintableImage newImage = historyObj.rollBack();
+				if(newImage != null) {
+					image = newImage;
+				}
+				render();
+			}
+
+			if(e.isControlDown() && e.getKeyCode() == 89) {
+				historyObj.resume();
+				render();
+			}
+		}
+
 	}
 
 	private class ComponentListener extends ComponentAdapter {
@@ -189,6 +220,8 @@ public class WorkingArea extends JPanel {
 			int y = getRelativeY(initialPoint);
 
 			tool.set(image, x, y);
+
+
 		}
 
 		@Override
@@ -311,4 +344,6 @@ public class WorkingArea extends JPanel {
 			System.out.println("Mouse wheel moved!");
 		}
 	}
+
+
 }

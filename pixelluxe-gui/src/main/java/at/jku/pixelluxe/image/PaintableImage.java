@@ -18,4 +18,6 @@ public interface PaintableImage {
 	void eraseLine(int x1, int y1,  int x2, int y2, int width);
 
 	Color getColor(int x, int y);
+
+	PaintableImage cloneImage();
 }

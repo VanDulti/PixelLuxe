@@ -43,4 +43,13 @@ public record SimplePaintableImage(BufferedImage image) implements PaintableImag
 	private Graphics2D graphics() {
 		return (Graphics2D) image.getGraphics();
 	}
+
+	@Override
+	public SimplePaintableImage cloneImage() {
+		BufferedImage clonedImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
+		Graphics2D g2D = clonedImage.createGraphics();
+		g2D.drawImage(image, 0,0, null);
+		g2D.dispose();
+		return new SimplePaintableImage(clonedImage);
+	}
 }
