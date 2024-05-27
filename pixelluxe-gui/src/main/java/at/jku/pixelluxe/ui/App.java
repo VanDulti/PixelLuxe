@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class App {
 	private static final String[] READER_FILE_SUFFIXES = ImageIO.getReaderFileSuffixes();
 	private static final String[] WRITER_FILE_SUFFIXES = ImageIO.getWriterFileSuffixes();
-	public static ExecutorService executorService = Executors.newWorkStealingPool();
+	private static final ExecutorService executorService = Executors.newWorkStealingPool();
 	private static JFrame mainFrame;
 	private final FileChooser fileChooser;
 	private final AtomicReference<Model> model = new AtomicReference<>(new Model(List.of()));
