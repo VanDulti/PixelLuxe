@@ -194,6 +194,16 @@ public class App {
 		});
 	}
 
+	public void update(PaintableImage paintableImage) {
+		this.model.updateAndGet(newmodel -> {
+			int selectedImage = this.selectedImage;
+			if (selectedImage < 0 || selectedImage >= newmodel.imageFiles().size()) {
+				return newmodel;
+			}
+			return newmodel.with(selectedImage, new ImageFile(paintableImage, newmodel.imageFiles().get(selectedImage).backingFile()));
+		});
+	}
+
 	private void updatePaintable(PaintableImage paintableImage) {
 		SwingUtilities.invokeLater(() -> body.updateImage(paintableImage));
 		this.model.updateAndGet(newmodel -> {

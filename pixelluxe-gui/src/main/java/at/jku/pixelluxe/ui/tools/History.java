@@ -1,33 +1,41 @@
 package at.jku.pixelluxe.ui.tools;
-
-import at.jku.pixelluxe.image.PaintableImage;
-
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
-public class History {
+public class History<E> {
+
 	private int maxSize;
-	private final Stack<PaintableImage> history;
+	private final List<E> history;
+	private int pos = 0;
 
-	public History(int maxSize) {
+	public History(E firstElem, int maxSize) {
 		this.maxSize = maxSize;
-		history = new Stack<>();
+		history = new ArrayList<>();
+		history.add(firstElem);
 	}
 
-	public PaintableImage rollBack() {
-		if(history.size() > 0) {
-			return history.pop();
+	public synchronized E rollBack() {
+		if(pos > 0) {
+			pos=pos-1;
+
+			return history.get(pos);
 		}
-		return null;
+		return history.getFirst();
 	}
 
-	public PaintableImage resume() {
-		return null;
+	public synchronized E resume() {
+		if(pos >= -1 && pos < history.size()-1) {
+			pos++;
+			return history.get(pos);
+		}
+
+		return history.getLast();
 	}
 
-	public boolean add(PaintableImage image) {
+	public synchronized boolean add(E elem) {
 		if(history.size() < maxSize) {
-			history.push(image);
+			history.add(elem);
+			pos++;
 			return true;
 		}
 		return false;

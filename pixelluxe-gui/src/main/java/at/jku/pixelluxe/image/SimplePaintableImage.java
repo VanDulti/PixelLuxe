@@ -2,6 +2,8 @@ package at.jku.pixelluxe.image;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 
 public record SimplePaintableImage(BufferedImage image) implements PaintableImage {
 
@@ -46,10 +48,9 @@ public record SimplePaintableImage(BufferedImage image) implements PaintableImag
 
 	@Override
 	public SimplePaintableImage cloneImage() {
-		BufferedImage clonedImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
-		Graphics2D g2D = clonedImage.createGraphics();
-		g2D.drawImage(image, 0,0, null);
-		g2D.dispose();
-		return new SimplePaintableImage(clonedImage);
+		ColorModel cm = this.image.getColorModel();
+		boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+		WritableRaster raster = this.image.copyData(null);
+		return new SimplePaintableImage(new BufferedImage(cm,raster,isAlphaPremultiplied,null));
 	}
 }
