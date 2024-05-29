@@ -2,11 +2,12 @@ package at.jku.pixelluxe.image;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 
 /**
  * Something to be painted inside {@link at.jku.pixelluxe.ui.WorkingArea}
  */
-public interface PaintableImage {
+public interface PaintableImage extends Cloneable {
 	int getWidth();
 
 	int getHeight();
@@ -19,5 +20,5 @@ public interface PaintableImage {
 
 	Color getColor(int x, int y);
 
-	PaintableImage cloneImage();
+	SimplePaintableImage cloneImage();
 }

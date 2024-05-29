@@ -1,6 +1,7 @@
 package at.jku.pixelluxe.ui;
 
 import at.jku.pixelluxe.image.PaintableImage;
+import at.jku.pixelluxe.image.SimplePaintableImage;
 import at.jku.pixelluxe.ui.tools.History;
 import at.jku.pixelluxe.ui.tools.WorkingTool;
 
@@ -24,7 +25,7 @@ public class WorkingArea extends JPanel {
 	 * JPanel.
 	 */
 	private PaintableImage image;
-	private History<PaintableImage> historyObj;
+	public History<PaintableImage> historyObj;
 	private double x = 0.0;
 	private double y = 0.0;
 	private double scale = 1.0;
@@ -57,7 +58,7 @@ public class WorkingArea extends JPanel {
 		setLayout(null);
 		setBackground(Color.LIGHT_GRAY);
 		addListeners();
-		historyObj = new History(image.cloneImage(), 128);
+		historyObj = new History((PaintableImage)image.cloneImage(), 128);
 	}
 
 	public void addListeners() {
@@ -102,8 +103,8 @@ public class WorkingArea extends JPanel {
 		}
 	}
 
-	public void takeSnapshot() {
-		historyObj.add(image.cloneImage());
+	public void takeSnapshot(){
+		historyObj.add((PaintableImage) image.cloneImage());
 		render();
 	}
 
@@ -165,20 +166,27 @@ public class WorkingArea extends JPanel {
 		@Override
 		public void keyPressed(KeyEvent e) {
 			if(e.isControlDown() && e.getKeyCode() == 90) {
-				PaintableImage newImage = historyObj.rollBack();
-
-				image = newImage.cloneImage();
-				render();
-				app.update(image);
+				undo();
 			}
 
 			if(e.isControlDown()  && e.getKeyCode() == 89) {
-				PaintableImage newImage = historyObj.resume();
-				image = newImage.cloneImage();
-				render();
-				app.update(image);
+				redo();
 			}
 		}
+	}
+
+	public void redo() {
+		PaintableImage newImage = historyObj.resume();
+		image = newImage.cloneImage();
+		render();
+		app.updateFromHistory(image);
+	}
+
+	public void undo() {
+		PaintableImage newImage = historyObj.rollBack();
+		image = newImage.cloneImage();
+		render();
+		app.updateFromHistory(image);
 	}
 
 	private class ComponentListener extends ComponentAdapter {
@@ -186,7 +194,6 @@ public class WorkingArea extends JPanel {
 		public void componentResized(ComponentEvent e) {
 			restrictBounds();
 			render();
-			System.out.println("Component resized!");
 		}
 	}
 

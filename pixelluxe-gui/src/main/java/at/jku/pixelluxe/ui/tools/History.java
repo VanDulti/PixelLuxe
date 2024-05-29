@@ -14,17 +14,17 @@ public class History<E> {
 		history.add(firstElem);
 	}
 
-	public synchronized E rollBack() {
+	public E rollBack() {
+
 		if(pos > 0) {
 			pos=pos-1;
-
 			return history.get(pos);
 		}
 		return history.getFirst();
 	}
 
-	public synchronized E resume() {
-		if(pos >= -1 && pos < history.size()-1) {
+	public E resume() {
+		if(pos < history.size()-1) {
 			pos++;
 			return history.get(pos);
 		}
@@ -32,13 +32,18 @@ public class History<E> {
 		return history.getLast();
 	}
 
-	public synchronized boolean add(E elem) {
-		if(history.size() < maxSize) {
-			history.add(elem);
+	public void add(E elem) {
+		if(pos < maxSize-1) {
 			pos++;
-			return true;
+			if(history.size() < maxSize) {
+				history.add(elem);
+			} else {
+				history.set(pos,elem);
+			}
+			return;
 		}
-		return false;
+		history.removeFirst();
+		pos--;
 	}
 
 }

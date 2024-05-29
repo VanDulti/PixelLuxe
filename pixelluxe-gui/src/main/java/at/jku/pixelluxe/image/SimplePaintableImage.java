@@ -47,7 +47,7 @@ public record SimplePaintableImage(BufferedImage image) implements PaintableImag
 	}
 
 	@Override
-	public SimplePaintableImage cloneImage() {
+	public SimplePaintableImage cloneImage()  {
 		ColorModel cm = this.image.getColorModel();
 		boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
 		WritableRaster raster = this.image.copyData(null);

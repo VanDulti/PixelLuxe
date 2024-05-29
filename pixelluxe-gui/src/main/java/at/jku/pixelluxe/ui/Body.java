@@ -16,7 +16,7 @@ import java.io.File;
 import java.util.function.Consumer;
 
 public class Body extends JPanel {
-	public final JTabbedPane tabPane;
+	private final JTabbedPane tabPane;
 	private ColorPicker colorPicker = null;
 	private final Consumer<Integer> onTabSelectionChanged;
 	private final DefaultTab defaultTab = new DefaultTab();
@@ -81,18 +81,26 @@ public class Body extends JPanel {
 		workingArea.initialize();
 	}
 
-	public void updateImage(PaintableImage paintableImage) {
+	public void updateImage(PaintableImage paintableImage, boolean takeSnapshot) {
 		int selectedIndex = tabPane.getSelectedIndex();
 		Component c = tabPane.getComponentAt(selectedIndex);
 		if (!(c instanceof WorkingArea workingArea)) {
 			return;
 		}
 		workingArea.setImage(paintableImage);
-		workingArea.takeSnapshot();
+		repaint();
+		if(takeSnapshot) {
+			workingArea.takeSnapshot();
+		}
 	}
+
 
 	public void removeActiveTab() {
 		int selected = tabPane.getSelectedIndex();
 		tabPane.removeTabAt(selected);
+	}
+
+	public JTabbedPane getTabPane() {
+		return tabPane;
 	}
 }
