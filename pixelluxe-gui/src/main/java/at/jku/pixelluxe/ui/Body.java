@@ -11,7 +11,7 @@ import at.jku.pixelluxe.ui.tools.Eraser;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+import java.awt.Component;
 import java.io.File;
 import java.util.function.Consumer;
 
@@ -28,7 +28,6 @@ public class Body extends JPanel {
 
 	public void initialize() {
 		colorPicker = new ColorPicker();
-
 		setLayout(new BorderLayout(16, 16));
 
 		JPanel toolbarPanel = new JPanel();
@@ -82,24 +81,26 @@ public class Body extends JPanel {
 		workingArea.initialize();
 	}
 
-	public void updateImage(PaintableImage paintableImage) {
-		int selected = tabPane.getSelectedIndex();
-		String title = tabPane.getTitleAt(selected);
-		WorkingArea workingArea = new WorkingArea(paintableImage);
-		tabPane.removeTabAt(selected);
-		int tabCount = tabPane.getTabCount();
-		tabPane.insertTab(title, null, workingArea, title, tabCount);
-		tabPane.setSelectedIndex(tabCount);
-		workingArea.initialize();
+	public void updateImage(PaintableImage paintableImage, boolean takeSnapshot) {
+		int selectedIndex = tabPane.getSelectedIndex();
+		Component c = tabPane.getComponentAt(selectedIndex);
+		if (!(c instanceof WorkingArea workingArea)) {
+			return;
+		}
+		workingArea.setImage(paintableImage);
+		repaint();
+		if(takeSnapshot) {
+			workingArea.takeSnapshot();
+		}
 	}
+
 
 	public void removeActiveTab() {
 		int selected = tabPane.getSelectedIndex();
 		tabPane.removeTabAt(selected);
 	}
 
-	private void colorPanePressed(ActionEvent e) {
-
+	public JTabbedPane getTabPane() {
+		return tabPane;
 	}
-
 }

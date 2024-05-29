@@ -2,6 +2,7 @@ package at.jku.pixelluxe.ui;
 
 import at.jku.pixelluxe.image.PaintableImage;
 import at.jku.pixelluxe.image.SimplePaintableImage;
+import at.jku.pixelluxe.ui.tools.History;
 import at.jku.pixelluxe.ui.tools.WorkingTool;
 
 import javax.swing.*;
@@ -10,8 +11,9 @@ import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
-public class WorkingArea extends JPanel {
+import static at.jku.pixelluxe.Main.app;
 
+public class WorkingArea extends JPanel {
 
 	public static final double MIN_FRAMES_PER_SECOND = 30.0;
 	public static final long MIN_FRAME_TIME_MILLIS = (long) (1000.0 / MIN_FRAMES_PER_SECOND);
@@ -23,12 +25,12 @@ public class WorkingArea extends JPanel {
 	 * JPanel.
 	 */
 	private PaintableImage image;
+	public History<PaintableImage> historyObj;
 	private double x = 0.0;
 	private double y = 0.0;
 	private double scale = 1.0;
 
 	private ToolListener toolListener;
-
 
 	public WorkingArea(PaintableImage image) {
 		this.image = image;
@@ -46,20 +48,23 @@ public class WorkingArea extends JPanel {
 		return image.image();
 	}
 
-	public void setImage(BufferedImage image) {
-		this.image = new SimplePaintableImage(image);
+	public void setImage(PaintableImage image) {
+		this.image =image;
 		render();
 	}
+
 
 	public void initialize() {
 		setLayout(null);
 		setBackground(Color.LIGHT_GRAY);
 		addListeners();
+		historyObj = new History((PaintableImage)image.cloneImage(), 128);
 	}
 
 	public void addListeners() {
 		ImageDragListener imageDragListener = new ImageDragListener();
 		toolListener = new ToolListener();
+		KeyListener keyListener = new KeyListener();
 
 		addMouseMotionListener(imageDragListener);
 		addMouseListener(imageDragListener);
@@ -67,10 +72,11 @@ public class WorkingArea extends JPanel {
 		addMouseMotionListener(toolListener);
 		addMouseListener(toolListener);
 
-		addMouseWheelListener(new MouseWheelListener());
+		addKeyListener(keyListener);
+		requestFocusInWindow();
 
+		addMouseWheelListener(new MouseWheelListener());
 		addComponentListener(new ComponentListener());
-		addKeyListener(new KeyListener());
 	}
 
 	void render() {
@@ -95,6 +101,11 @@ public class WorkingArea extends JPanel {
 			// kinda ugly tho
 			drawPixelGrid(g2d);
 		}
+	}
+
+	public void takeSnapshot(){
+		historyObj.add((PaintableImage) image.cloneImage());
+		render();
 	}
 
 	/**
@@ -143,19 +154,39 @@ public class WorkingArea extends JPanel {
 		return toolListener.getTool();
 	}
 
-	/*
+	/**
 		Is the Mehtod for other Classes primarly Working Area to set the Tools  the user selected
 		Which will then be executed on mouse Events
-	 */
+	 **/
 	public void setTool(WorkingTool tool) {
 		toolListener.setTool(tool);
 	}
 
-	private static class KeyListener extends KeyAdapter {
+	private class KeyListener extends KeyAdapter {
 		@Override
-		public void keyReleased(KeyEvent e) {
-			System.out.println("Key released!");
+		public void keyPressed(KeyEvent e) {
+			if(e.isControlDown() && e.getKeyCode() == 90) {
+				undo();
+			}
+
+			if(e.isControlDown()  && e.getKeyCode() == 89) {
+				redo();
+			}
 		}
+	}
+
+	public void redo() {
+		PaintableImage newImage = historyObj.resume();
+		image = newImage.cloneImage();
+		render();
+		app.updateFromHistory(image);
+	}
+
+	public void undo() {
+		PaintableImage newImage = historyObj.rollBack();
+		image = newImage.cloneImage();
+		render();
+		app.updateFromHistory(image);
 	}
 
 	private class ComponentListener extends ComponentAdapter {
@@ -163,7 +194,6 @@ public class WorkingArea extends JPanel {
 		public void componentResized(ComponentEvent e) {
 			restrictBounds();
 			render();
-			System.out.println("Component resized!");
 		}
 	}
 
@@ -189,6 +219,7 @@ public class WorkingArea extends JPanel {
 			int y = getRelativeY(initialPoint);
 
 			tool.set(image, x, y);
+
 		}
 
 		@Override
@@ -214,7 +245,7 @@ public class WorkingArea extends JPanel {
 			tool.drag(image, startPosX, startPosY, endPosX, endPosY);
 
 			initialPoint = currentPoint;
-
+			takeSnapshot();
 			render();
 		}
 
@@ -274,8 +305,6 @@ public class WorkingArea extends JPanel {
 
 			render();
 		}
-
-
 	}
 
 	private class MouseWheelListener extends MouseAdapter {
@@ -311,4 +340,5 @@ public class WorkingArea extends JPanel {
 			System.out.println("Mouse wheel moved!");
 		}
 	}
+
 }

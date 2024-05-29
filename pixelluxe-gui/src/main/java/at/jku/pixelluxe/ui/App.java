@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.Component;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +26,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class App {
+public class App extends JPanel{
 	private static final String[] READER_FILE_SUFFIXES = ImageIO.getReaderFileSuffixes();
 	private static final String[] WRITER_FILE_SUFFIXES = ImageIO.getWriterFileSuffixes();
 	private static final ExecutorService executorService = Executors.newWorkStealingPool();
@@ -36,11 +37,15 @@ public class App {
 	private final Body body = new Body(
 			this::tabSelectionChanged
 	);
+
+
 	private final TopLevelMenuBar menuBar = new TopLevelMenuBar(
 			new FileMenu(
 					this::onOpenPressed,
 					this::onSavePressed,
-					this::onSaveAsPressed
+					this::onSaveAsPressed,
+					this::onUndoPressed,
+					this::onRedoPressed
 			),
 			new TabMenu(
 					this::onTabClose
@@ -186,16 +191,46 @@ public class App {
 		}
 	}
 
+	private void onUndoPressed() {
+		JTabbedPane tabPane = body.getTabPane();
+		int selectedIndex = tabPane.getSelectedIndex();
+		Component c = tabPane.getComponentAt(selectedIndex);
+		if (!(c instanceof WorkingArea workingArea)) {
+			return;
+		}
+		workingArea.undo();
+	}
+
+	private void onRedoPressed() {
+		JTabbedPane tabPane = body.getTabPane();
+		int selectedIndex = tabPane.getSelectedIndex();
+		Component c = tabPane.getComponentAt(selectedIndex);
+		if (!(c instanceof WorkingArea workingArea)) {
+			return;
+		}
+		workingArea.redo();
+	}
+
 	private void onConvolutionPressed() {
 		executorService.submit(() -> {
 			Model model = this.model.get();
 			BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.ySobel);
-			updatePaintable(new SimplePaintableImage(bi));
+			updatePaintable(new SimplePaintableImage(bi), true);
 		});
 	}
 
-	private void updatePaintable(PaintableImage paintableImage) {
-		SwingUtilities.invokeLater(() -> body.updateImage(paintableImage));
+	public void updateFromHistory(PaintableImage paintableImage) {
+		this.model.updateAndGet(newmodel -> {
+			int selectedImage = this.selectedImage;
+			if (selectedImage < 0 || selectedImage >= newmodel.imageFiles().size()) {
+				return newmodel;
+			}
+			return newmodel.with(selectedImage, new ImageFile(paintableImage, newmodel.imageFiles().get(selectedImage).backingFile()));
+		});
+	}
+
+	private void updatePaintable(PaintableImage paintableImage, boolean takeSnapshot) {
+		SwingUtilities.invokeLater(() -> body.updateImage(paintableImage, takeSnapshot));
 		this.model.updateAndGet(newmodel -> {
 			int selectedImage = this.selectedImage;
 			if (selectedImage < 0 || selectedImage >= newmodel.imageFiles().size()) {
@@ -210,7 +245,7 @@ public class App {
 			int intensity = getIntensity();
 			Model model = this.model.get();
 			BufferedImage bi = new Filter().saturation(model.imageFiles().get(selectedImage).image().image(), intensity);
-			updatePaintable(new SimplePaintableImage(bi));
+			updatePaintable(new SimplePaintableImage(bi), true);
 		});
 	}
 
@@ -227,7 +262,7 @@ public class App {
 			int intensity = getIntensity();
 			Model model = this.model.get();
 			BufferedImage bi = new Filter().contrast(model.imageFiles().get(selectedImage).image().image(), intensity);
-			updatePaintable(new SimplePaintableImage(bi));
+			updatePaintable(new SimplePaintableImage(bi), true);
 		});
 	}
 
@@ -235,7 +270,7 @@ public class App {
 		executorService.submit(() -> {
 			Model model = this.model.get();
 			BufferedImage bi = new Filter().invert(model.imageFiles().get(selectedImage).image().image());
-			updatePaintable(new SimplePaintableImage(bi));
+			updatePaintable(new SimplePaintableImage(bi), true);
 		});
 	}
 
@@ -243,7 +278,7 @@ public class App {
 		executorService.submit(() -> {
 			Model model = this.model.get();
 			BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.xEdge);
-			updatePaintable(new SimplePaintableImage(bi));
+			updatePaintable(new SimplePaintableImage(bi), true);
 		});
 	}
 
@@ -251,7 +286,7 @@ public class App {
 		executorService.submit(() -> {
 			Model model = this.model.get();
 			BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.yEdge);
-			updatePaintable(new SimplePaintableImage(bi));
+			updatePaintable(new SimplePaintableImage(bi), true);
 		});
 	}
 
@@ -259,7 +294,7 @@ public class App {
 		executorService.submit(() -> {
 			Model model = this.model.get();
 			BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.xSobel);
-			updatePaintable(new SimplePaintableImage(bi));
+			updatePaintable(new SimplePaintableImage(bi), true);
 		});
 	}
 
@@ -267,7 +302,7 @@ public class App {
 		executorService.submit(() -> {
 			Model model = this.model.get();
 			BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.ySobel);
-			updatePaintable(new SimplePaintableImage(bi));
+			updatePaintable(new SimplePaintableImage(bi), true);
 		});
 	}
 
@@ -275,7 +310,7 @@ public class App {
 		executorService.submit(() -> {
 			Model model = this.model.get();
 			BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.laplace);
-			updatePaintable(new SimplePaintableImage(bi));
+			updatePaintable(new SimplePaintableImage(bi), true);
 		});
 	}
 
@@ -283,7 +318,7 @@ public class App {
 		executorService.submit(() -> {
 			Model model = this.model.get();
 			BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.sharpen);
-			updatePaintable(new SimplePaintableImage(bi));
+			updatePaintable(new SimplePaintableImage(bi), true);
 		});
 	}
 
@@ -291,7 +326,7 @@ public class App {
 		executorService.submit(() -> {
 			Model model = this.model.get();
 			BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.gauss);
-			updatePaintable(new SimplePaintableImage(bi));
+			updatePaintable(new SimplePaintableImage(bi), true);
 		});
 	}
 
@@ -299,7 +334,7 @@ public class App {
 		executorService.submit(() -> {
 			Model model = this.model.get();
 			BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.meanBlur);
-			updatePaintable(new SimplePaintableImage(bi));
+			updatePaintable(new SimplePaintableImage(bi), true);
 		});
 	}
 

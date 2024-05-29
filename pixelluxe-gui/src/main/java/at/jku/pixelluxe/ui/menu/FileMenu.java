@@ -10,12 +10,16 @@ public class FileMenu extends JMenu implements Component<JMenu> {
 	private final Runnable onOpen;
 	private final Runnable onSave;
 	private final Runnable onSaveAs;
+	private final Runnable onUndo;
+	private final Runnable onRedo;
 
-	public FileMenu(Runnable onOpen, Runnable onSave, Runnable onSaveAs) {
+	public FileMenu(Runnable onOpen, Runnable onSave, Runnable onSaveAs, Runnable onUndo, Runnable onRedo) {
 		super("File");
 		this.onOpen = onOpen;
 		this.onSave = onSave;
 		this.onSaveAs = onSaveAs;
+		this.onUndo = onUndo;
+		this.onRedo = onRedo;
 	}
 
 	@Override
@@ -32,9 +36,17 @@ public class FileMenu extends JMenu implements Component<JMenu> {
 		openButton.addActionListener(action -> onOpen.run());
 		openButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
 
+		JMenuItem undoButton = new JMenuItem("Undo");
+		undoButton.addActionListener(action -> onUndo.run());
+
+		JMenuItem redoButton = new JMenuItem("Redo");
+		redoButton.addActionListener(action -> onRedo.run());
+
 		add(openButton);
 		add(saveButton);
 		add(saveAsButton);
+		add(undoButton);
+		add(redoButton);
 		return this;
 	}
 
