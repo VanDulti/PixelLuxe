@@ -1,67 +1,109 @@
 package at.jku.pixelluxe.filter.convolution;
 
 public class Kernels {
-	public static final Kernel sharpen = new Kernel(
+
+	// --------------------------------------
+	//				Sharpen/Blur
+	// --------------------------------------
+	public static Kernel sharpen = new Kernel(
 			new int[][]{
-					{0, -1, 0},
-					{-1, 5, -1},
-					{0, -1, 0}
+					{ 0, -1,  0},
+					{-1,  5, -1},
+					{ 0, -1,  0}
 			}, 1, "sharp"
 	);
 
-	public static final Kernel xEdge = new Kernel(
+	public static Kernel gauss = new Kernel(
 			new int[][]{
-					{-1, 0, 1},
-					{-1, 0, 1},
-					{-1, 0, 1}
-			}, 1, "edge"
-	);
-
-	public static final Kernel yEdge = new Kernel(
-			new int[][]{
-					{-1, -1, -1},
-					{0, 0, 0},
-					{1, 1, 1}
-			}, 1, "edge"
-	);
-
-	public static final Kernel laplace = new Kernel(
-			new int[][]{
-					{0, 1, 0},
-					{1, -4, 1},
-					{0, 1, 0}
-			}, 1, "edge"
-	);
-
-	public static final Kernel gauss = new Kernel(
-			new int[][]{
-					{1, 2, 1},
-					{2, 4, 2},
-					{1, 2, 1}
+					{ 1,  2,  1},
+					{ 2,  4,  2},
+					{ 1,  2,  1}
 			}, 16, "blur"
 	);
 
-	public static final Kernel meanBlur = new Kernel(
+	public static Kernel meanBlur = new Kernel(
 			new int[][]{
-					{1, 1, 1},
-					{1, 1, 1},
-					{1, 1, 1}
+					{ 1,  1,  1},
+					{ 1,  1,  1},
+					{ 1,  1,  1}
 			}, 9, "blur"
 	);
 
-	public static final Kernel xSobel = new Kernel(
+	// --------------------------------------
+	//				Edge Detection
+	// --------------------------------------
+	public static Kernel horizontal = new Kernel(
 			new int[][]{
-					{-1, -2, -1},
-					{0, 0, 0},
-					{1, 2, 1}
+					{-1,  0,  1},
+					{-1,  0,  1},
+					{-1,  0,  1}
 			}, 1, "edge"
 	);
 
-	public static final Kernel ySobel = new Kernel(
+	public static Kernel vertical = new Kernel(
 			new int[][]{
-					{-1, 0, 1},
-					{-2, 0, 2},
-					{-1, 0, 1}
+					{-1, -1, -1},
+					{ 0,  0,  0},
+					{ 1,  1,  1}
 			}, 1, "edge"
+	);
+
+	public static Kernel laplace = new Kernel(
+			new int[][]{
+					{0,  1,  0},
+					{1, -4,  1},
+					{0,  1,  0}
+			}, 1, "edge"
+	);
+
+	public static Kernel emboss = new Kernel(
+			new int[][]{
+					{-2, -1,  0},
+					{-1,  1,  1},
+					{ 0,  1,  2}
+			}, 1, "edge"
+	);
+
+	public static Kernel outline = new Kernel(
+			new int[][]{
+					{-1, -1, -1},
+					{-1,  8, -1},
+					{-1, -1, -1}
+			}, 1, "edge"
+	);
+
+	// --------------------------------------
+	//					Sobel
+	// --------------------------------------
+	public static Kernel bottomSobel = new Kernel(
+			new int[][]{
+					{-1, -2, -1},
+					{ 0,  0,  0},
+					{ 1,  2,  1}
+			}, 1, "sobelV"
+	);
+
+	public static Kernel topSobel = new Kernel(
+			new int[][]{
+					{ 1,  2,  1},
+					{ 0,  0,  0},
+					{-1, -2, -1}
+			}, 1, "sobelV"
+	);
+
+	public static Kernel rightSobel = new Kernel(
+			new int[][]{
+					{-1,  0,  1},
+					{-2,  0,  2},
+					{-1,  0,  1}
+			}, 1, "sobelH"
+	);
+
+	public static Kernel leftSobel = new Kernel(
+			new int[][]{
+					{ 1,  0, -1},
+					{ 2,  0, -2},
+					{ 1,  0, -1}
+			}, 1, "sobelH"
 	);
 }

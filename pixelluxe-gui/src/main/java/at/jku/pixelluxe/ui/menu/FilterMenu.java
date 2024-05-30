@@ -10,14 +10,12 @@ public class FilterMenu extends JMenu implements Component<JMenu> {
 	private final Runnable onInvert;
 	private final Runnable onContrast;
 	private final Runnable onSaturation;
-	private final Runnable onConvolution;
 
-	public FilterMenu(Runnable onInvert, Runnable onContrast, Runnable onSaturation, Runnable onConvolution) {
+	public FilterMenu(Runnable onInvert, Runnable onContrast, Runnable onSaturation) {
 		super("Filter");
 		this.onInvert = onInvert;
 		this.onContrast = onContrast;
 		this.onSaturation = onSaturation;
-		this.onConvolution = onConvolution;
 	}
 
 	@Override
@@ -34,16 +32,9 @@ public class FilterMenu extends JMenu implements Component<JMenu> {
 		saturationBtn.addActionListener(action -> onSaturation.run());
 		saturationBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.ALT_DOWN_MASK));
 
-		JMenuItem convolutionBtn = new JMenuItem("Convolution", KeyEvent.VK_W);
-		convolutionBtn.addActionListener(action -> onConvolution.run());
-		convolutionBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.ALT_DOWN_MASK));
-
 		add(invertBtn);
 		add(contrastBtn);
 		add(saturationBtn);
-		add(convolutionBtn);
 		return this;
 	}
-
-
 }
