@@ -13,16 +13,16 @@ public class ContourMenu extends JMenu implements Component<JMenu> {
 	private final Runnable onEmboss;
 	private final Runnable onOutline;
 
-    public ContourMenu(Runnable onHorizontal, Runnable onVertical, Runnable onLaplace, Runnable onEmboss, Runnable onOutline) {
+	public ContourMenu(Runnable onHorizontal, Runnable onVertical, Runnable onLaplace, Runnable onEmboss, Runnable onOutline) {
 		super("Contour");
-        this.onHorizontal = onHorizontal;
-        this.onVertical = onVertical;
-        this.onLaplace = onLaplace;
+		this.onHorizontal = onHorizontal;
+		this.onVertical = onVertical;
+		this.onLaplace = onLaplace;
 		this.onEmboss = onEmboss;
 		this.onOutline = onOutline;
-    }
+	}
 
-    @Override
+	@Override
 	public JMenu initialize() {
 		JMenuItem xEdgeBtn = new JMenuItem("Horizontal", KeyEvent.VK_1);
 		xEdgeBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.SHIFT_DOWN_MASK));

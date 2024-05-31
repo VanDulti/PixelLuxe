@@ -5,13 +5,13 @@ import java.awt.image.BufferedImage;
 
 public class Convolution {
 
-	public BufferedImage filter(Image image, Kernel kernel){
+	public BufferedImage filter(Image image, Kernel kernel) {
 		BufferedImage canvas = convertType(image, kernel);
 		fillPadding(canvas, kernel);
 		return convolve(canvas, kernel);
 	}
 
-	public BufferedImage filter(BufferedImage canvas, Kernel kernel){
+	public BufferedImage filter(BufferedImage canvas, Kernel kernel) {
 		fillPadding(canvas, kernel);
 		return convolve(canvas, kernel);
 	}
@@ -25,7 +25,7 @@ public class Convolution {
 			canvas = convertToGrayScale(canvas);
 		}
 
-		if(kernel.getType().startsWith("sobel") && !kernel.getIsTransformed()) {
+		if (kernel.getType().startsWith("sobel")) {
 			KERNEL = transposeAndInvert(kernel);
 		}
 
@@ -166,7 +166,7 @@ public class Convolution {
 		return (255 << 24) | (R << 16) | (G << 8) | B;
 	}
 
-	private int[][] transposeAndInvert(Kernel kernel){
+	private int[][] transposeAndInvert(Kernel kernel) {
 		int[][] matrix = kernel.getMatrix();
 		int l = matrix.length;
 
@@ -174,25 +174,24 @@ public class Convolution {
 		int[][] invMatrix = new int[l][l];
 
 		// transposes the matrix
-		for(int i = 0; i < matrix.length; i++){
-			for(int j = 0; j < matrix.length; j++){
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix.length; j++) {
 				transMatrix[i][j] = matrix[j][i];
 			}
 		}
 
 		// inverts matrix horizontally for top/bottom and vertically for left/right
-		if(kernel.getType().equals("sobelV")){
-			for(int i = 0; i < l; i++){
-				for(int j = 0; j < l; j++){
+		if (kernel.getType().equals("sobelV")) {
+			for (int i = 0; i < l; i++) {
+				for (int j = 0; j < l; j++) {
 					invMatrix[i][j] = transMatrix[i][l - 1 - j];
 				}
 			}
 		} else {
-			for(int i = 0; i < l; i++){
-                System.arraycopy(transMatrix[l - 1 - i], 0, invMatrix[i], 0, l);
+			for (int i = 0; i < l; i++) {
+				System.arraycopy(transMatrix[l - 1 - i], 0, invMatrix[i], 0, l);
 			}
 		}
-		kernel.setIsTransformed(true);
 		return invMatrix;
 	}
 }

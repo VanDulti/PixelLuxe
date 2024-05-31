@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
-public class SobelMenu extends JMenu implements Component<JMenu>{
+public class SobelMenu extends JMenu implements Component<JMenu> {
 	private final Runnable onTopSobel;
 	private final Runnable onBottomSobel;
 	private final Runnable onLeftSobel;

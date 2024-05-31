@@ -27,7 +27,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class App extends JPanel{
+public class App extends JPanel {
 	private static final String[] READER_FILE_SUFFIXES = ImageIO.getReaderFileSuffixes();
 	private static final String[] WRITER_FILE_SUFFIXES = ImageIO.getWriterFileSuffixes();
 	private static final ExecutorService executorService = Executors.newWorkStealingPool();
@@ -272,7 +272,7 @@ public class App extends JPanel{
 		});
 	}
 
-	private void applyKernel(Kernel kernel){
+	private void applyKernel(Kernel kernel) {
 		executorService.submit(() -> {
 			Model model = this.model.get();
 			BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), kernel);

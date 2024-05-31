@@ -11,14 +11,14 @@ public class DetailMenu extends JMenu implements Component<JMenu> {
 	private final Runnable onGauss;
 	private final Runnable onMeanBlur;
 
-    public DetailMenu(Runnable onSharpen, Runnable onGauss, Runnable onMeanBlur) {
-        super("Detail");
-        this.onSharpen = onSharpen;
-        this.onGauss = onGauss;
-        this.onMeanBlur = onMeanBlur;
-    }
+	public DetailMenu(Runnable onSharpen, Runnable onGauss, Runnable onMeanBlur) {
+		super("Detail");
+		this.onSharpen = onSharpen;
+		this.onGauss = onGauss;
+		this.onMeanBlur = onMeanBlur;
+	}
 
-    @Override
+	@Override
 	public JMenu initialize() {
 		JMenuItem sharpenBtn = new JMenuItem("Sharpen", KeyEvent.VK_1);
 		sharpenBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.CTRL_DOWN_MASK));
