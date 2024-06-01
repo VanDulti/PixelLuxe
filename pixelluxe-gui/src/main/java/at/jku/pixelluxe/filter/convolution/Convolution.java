@@ -5,30 +5,37 @@ import java.awt.image.BufferedImage;
 
 public class Convolution {
 
-	//TODO BUG: filtering adds black pixels to the bottom and RHS of picture
-	//			shifts the picture to the top left
-
 	public BufferedImage filter(Image image, Kernel kernel) {
+		BufferedImage canvas = convertType(image, kernel);
+		fillPadding(canvas, kernel);
+		return convolve(canvas, kernel);
+	}
+
+	public BufferedImage filter(BufferedImage canvas, Kernel kernel) {
+		fillPadding(canvas, kernel);
+		return convolve(canvas, kernel);
+	}
+
+	public BufferedImage convolve(BufferedImage canvas, Kernel kernel) {
 		int[][] KERNEL = kernel.getMatrix();
 		int FACTOR = kernel.getFactor();
 		int PAD = (KERNEL.length - 1) / 2;
 
-
-		BufferedImage canvas = convertType(image, kernel);
-		if (kernel.getType().equals("edge")) {
-			canvas = convertTypeToGrayScale(canvas);
+		if (kernel.getType().equals("edge") || kernel.getType().startsWith("sobel")) {
+			canvas = convertToGrayScale(canvas);
 		}
-		fillPadding(canvas, kernel);
+
+		if (kernel.getType().startsWith("sobel")) {
+			KERNEL = transposeAndInvert(kernel);
+		}
 
 		int w = canvas.getWidth();
 		int h = canvas.getHeight();
 
-		BufferedImage filtered = new BufferedImage(w - PAD, h - PAD, BufferedImage.TYPE_INT_ARGB);
-
+		BufferedImage filtered = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 
 		for (int i = PAD; i < w - PAD; i++) {
 			for (int j = PAD; j < h - PAD; j++) {
-
 				int sumR = 0;
 				int sumG = 0;
 				int sumB = 0;
@@ -52,13 +59,13 @@ public class Convolution {
 				int b = Math.min(Math.max((sumB / FACTOR), 0), 255);
 
 				int filteredRGB = genRGB(r, g, b);
-				filtered.setRGB(i - PAD, j - PAD, filteredRGB);
+				filtered.setRGB(i, j, filteredRGB);
 			}
 		}
 		return filtered;
 	}
 
-	// converts image to BufferedImage of size: width, height += 2*Padding
+	// converts image to bufferedImage, adds EMPTY padding
 	private BufferedImage convertType(Image image, Kernel kernel) {
 		int PAD = (kernel.getMatrix().length - 1) / 2;
 		int w = image.getWidth(null) + 2 * PAD;
@@ -72,7 +79,8 @@ public class Convolution {
 		return bi;
 	}
 
-	private BufferedImage convertTypeToGrayScale(BufferedImage bi) {
+	// converts bufferedImage to gray scale for edge/contrast related kernels
+	private BufferedImage convertToGrayScale(BufferedImage bi) {
 		int w = bi.getWidth();
 		int h = bi.getHeight();
 
@@ -96,52 +104,52 @@ public class Convolution {
 		int w = canvas.getWidth();
 		int h = canvas.getHeight();
 
-		//------- TOP -> BOTTOM -> LEFT -> RIGHT -------
-		// fills top padding with below row of pixels
+		//------------------- STRAIGHT BORDERS -------------------
+		// top
 		for (int i = PAD; i < w - (PAD); i++) {
 			for (int j = 0; j < PAD; j++) {
 				canvas.setRGB(i, j, canvas.getRGB(i, j + PAD));
 			}
 		}
-		//fills bottom padding with above row of pixels
+		// bottom
 		for (int i = PAD; i < w - PAD; i++) {
 			for (int j = h - PAD; j < h; j++) {
 				canvas.setRGB(i, j, canvas.getRGB(i, j - PAD));
 			}
 		}
-		// fills left hs padding with pixels to the right
+		// left
 		for (int i = 0; i < PAD; i++) {
 			for (int j = PAD; j < h - PAD; j++) {
 				canvas.setRGB(i, j, canvas.getRGB(i + PAD, j));
 			}
 		}
-		// fills right hs padding with pixels to the left
+		// right
 		for (int i = w - PAD; i < w; i++) {
 			for (int j = PAD; j < h - PAD; j++) {
 				canvas.setRGB(i, j, canvas.getRGB(i - PAD, j));
 			}
 		}
 
-		//---------- TL -> TR -> BL -> BR -----------
-		// fills top left corner with top left pixel
+		//------------------------- CORNERS -------------------------
+		// top left
 		for (int i = 0; i < PAD; i++) {
 			for (int j = 0; j < PAD; j++) {
 				canvas.setRGB(i, j, canvas.getRGB(i + PAD, j + PAD));
 			}
 		}
-		// fills top right corner with top right pixel
+		// top right
 		for (int i = w - PAD; i < w; i++) {
 			for (int j = 0; j < PAD; j++) {
 				canvas.setRGB(i, j, canvas.getRGB(i - PAD, j + PAD));
 			}
 		}
-		// fills bottom left corner with bottom left pixel
+		// bottom left
 		for (int i = 0; i < PAD; i++) {
 			for (int j = h - PAD; j < h; j++) {
 				canvas.setRGB(i, j, canvas.getRGB(i + PAD, j - PAD));
 			}
 		}
-		// fills bottom right corner with bottom right pixel
+		// bottom right
 		for (int i = w - PAD; i < w; i++) {
 			for (int j = h - PAD; j < h; j++) {
 				canvas.setRGB(i, j, canvas.getRGB(i - PAD, j - PAD));
@@ -149,7 +157,6 @@ public class Convolution {
 		}
 	}
 
-	// --------------- helper methods---------------------
 	// creates 32bit RGBA integer from 4 channels
 	private int genRGB(int R, int G, int B) {
 		R = Math.max(0, Math.min(R, 255));
@@ -157,5 +164,34 @@ public class Convolution {
 		B = Math.max(0, Math.min(B, 255));
 
 		return (255 << 24) | (R << 16) | (G << 8) | B;
+	}
+
+	private int[][] transposeAndInvert(Kernel kernel) {
+		int[][] matrix = kernel.getMatrix();
+		int l = matrix.length;
+
+		int[][] transMatrix = new int[l][l];
+		int[][] invMatrix = new int[l][l];
+
+		// transposes the matrix
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix.length; j++) {
+				transMatrix[i][j] = matrix[j][i];
+			}
+		}
+
+		// inverts matrix horizontally for top/bottom and vertically for left/right
+		if (kernel.getType().equals("sobelV")) {
+			for (int i = 0; i < l; i++) {
+				for (int j = 0; j < l; j++) {
+					invMatrix[i][j] = transMatrix[i][l - 1 - j];
+				}
+			}
+		} else {
+			for (int i = 0; i < l; i++) {
+				System.arraycopy(transMatrix[l - 1 - i], 0, invMatrix[i], 0, l);
+			}
+		}
+		return invMatrix;
 	}
 }

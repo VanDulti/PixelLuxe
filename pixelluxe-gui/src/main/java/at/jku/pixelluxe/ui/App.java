@@ -2,6 +2,7 @@ package at.jku.pixelluxe.ui;
 
 import at.jku.pixelluxe.filter.Filter;
 import at.jku.pixelluxe.filter.convolution.Convolution;
+import at.jku.pixelluxe.filter.convolution.Kernel;
 import at.jku.pixelluxe.filter.convolution.Kernels;
 import at.jku.pixelluxe.image.ImageFile;
 import at.jku.pixelluxe.image.Model;
@@ -26,7 +27,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class App extends JPanel{
+public class App extends JPanel {
 	private static final String[] READER_FILE_SUFFIXES = ImageIO.getReaderFileSuffixes();
 	private static final String[] WRITER_FILE_SUFFIXES = ImageIO.getWriterFileSuffixes();
 	private static final ExecutorService executorService = Executors.newWorkStealingPool();
@@ -56,20 +57,25 @@ public class App extends JPanel{
 			new FilterMenu(
 					this::onInvertPressed,
 					this::onContrastPressed,
-					this::onSaturationPressed,
-					this::onConvolutionPressed
+					this::onSaturationPressed
 			),
-			new EdgeDetectionMenu(
-					this::onXEdgePressed,
-					this::onYEdgePressed,
-					this::onXSobelPressed,
-					this::onYSobelPressed,
-					this::onLaplacePressed
+			new ContourMenu(
+					this::onHorizontalPressed,
+					this::onVerticalPressed,
+					this::onLaplacePressed,
+					this::onEmbossPressed,
+					this::onOutlinePressed
 			),
-			new BlurSharpenMenu(
+			new DetailMenu(
 					this::onSharpenPressed,
 					this::onGaussPressed,
 					this::onMeanBlurPressed
+			),
+			new SobelMenu(
+					this::onTopSobelPressed,
+					this::onBottomSobelPressed,
+					this::onLeftSobelPressed,
+					this::onRightSobelPressed
 			)
 
 	);
@@ -211,14 +217,6 @@ public class App extends JPanel{
 		workingArea.redo();
 	}
 
-	private void onConvolutionPressed() {
-		executorService.submit(() -> {
-			Model model = this.model.get();
-			BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.ySobel);
-			updatePaintable(new SimplePaintableImage(bi), true);
-		});
-	}
-
 	public void updateFromHistory(PaintableImage paintableImage) {
 		this.model.updateAndGet(newmodel -> {
 			int selectedImage = this.selectedImage;
@@ -274,68 +272,60 @@ public class App extends JPanel{
 		});
 	}
 
-	private void onXEdgePressed() {
+	private void applyKernel(Kernel kernel) {
 		executorService.submit(() -> {
 			Model model = this.model.get();
-			BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.xEdge);
+			BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), kernel);
 			updatePaintable(new SimplePaintableImage(bi), true);
 		});
 	}
 
-	private void onYEdgePressed() {
-		executorService.submit(() -> {
-			Model model = this.model.get();
-			BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.yEdge);
-			updatePaintable(new SimplePaintableImage(bi), true);
-		});
+	private void onHorizontalPressed() {
+		applyKernel(Kernels.horizontal);
 	}
 
-	private void onXSobelPressed() {
-		executorService.submit(() -> {
-			Model model = this.model.get();
-			BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.xSobel);
-			updatePaintable(new SimplePaintableImage(bi), true);
-		});
-	}
-
-	private void onYSobelPressed() {
-		executorService.submit(() -> {
-			Model model = this.model.get();
-			BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.ySobel);
-			updatePaintable(new SimplePaintableImage(bi), true);
-		});
+	private void onVerticalPressed() {
+		applyKernel(Kernels.vertical);
 	}
 
 	private void onLaplacePressed() {
-		executorService.submit(() -> {
-			Model model = this.model.get();
-			BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.laplace);
-			updatePaintable(new SimplePaintableImage(bi), true);
-		});
+		applyKernel(Kernels.laplace);
+	}
+
+	private void onEmbossPressed() {
+		applyKernel(Kernels.emboss);
+	}
+
+	private void onOutlinePressed() {
+		applyKernel(Kernels.outline);
 	}
 
 	private void onSharpenPressed() {
-		executorService.submit(() -> {
-			Model model = this.model.get();
-			BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.sharpen);
-			updatePaintable(new SimplePaintableImage(bi), true);
-		});
+		applyKernel(Kernels.sharpen);
 	}
 
 	private void onGaussPressed() {
-		executorService.submit(() -> {
-			Model model = this.model.get();
-			BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.gauss);
-			updatePaintable(new SimplePaintableImage(bi), true);
-		});
+		applyKernel(Kernels.gauss);
 	}
 
 	private void onMeanBlurPressed() {
-		executorService.submit(() -> {
-			Model model = this.model.get();
-			BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), Kernels.meanBlur);
-			updatePaintable(new SimplePaintableImage(bi), true);
-		});
+		applyKernel(Kernels.meanBlur);
+	}
+
+	private void onTopSobelPressed() {
+		applyKernel(Kernels.topSobel);
+	}
+
+	private void onBottomSobelPressed() {
+		applyKernel(Kernels.bottomSobel);
+	}
+
+	private void onLeftSobelPressed() {
+		applyKernel(Kernels.leftSobel);
+	}
+
+	private void onRightSobelPressed() {
+		applyKernel(Kernels.rightSobel);
 	}
 
 	private ImageFile getSelectedImage() {

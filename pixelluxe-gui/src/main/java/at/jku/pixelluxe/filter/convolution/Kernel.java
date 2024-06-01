@@ -6,9 +6,9 @@ public class Kernel {
 	private final int factor;
 
 	public Kernel(int[][] matrix, int factor, String type) {
+		this.type = type;
 		this.matrix = matrix;
 		this.factor = factor;
-		this.type = type;
 	}
 
 	public int[][] getMatrix() {
