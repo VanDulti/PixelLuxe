@@ -4,30 +4,34 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Convolution {
+	public BufferedImage filter(BufferedImage canvas, Kernel kernel, int intensity) {
+		double[][] KERNEL = kernel.getMatrix();
+		String type = kernel.getType();
+		fillPadding(addPadding(canvas, kernel), kernel);
 
-	public BufferedImage filter(Image image, Kernel kernel) {
-		BufferedImage canvas = convertType(image, kernel);
-		fillPadding(canvas, kernel);
-		return convolve(canvas, kernel);
-	}
-
-	public BufferedImage filter(BufferedImage canvas, Kernel kernel) {
-		fillPadding(canvas, kernel);
-		return convolve(canvas, kernel);
-	}
-
-	public BufferedImage convolve(BufferedImage canvas, Kernel kernel) {
-		int[][] KERNEL = kernel.getMatrix();
-		int FACTOR = kernel.getFactor();
-		int PAD = (KERNEL.length - 1) / 2;
-
-		if (kernel.getType().equals("edge") || kernel.getType().startsWith("sobel")) {
+		if (intensity == 0) {
+			return canvas;
+		}
+		if (!type.equals("detail")) {
 			canvas = convertToGrayScale(canvas);
 		}
-
-		if (kernel.getType().startsWith("sobel")) {
+		if (type.startsWith("sobel")) {
 			KERNEL = transposeAndInvert(kernel);
 		}
+
+		if (type.equals("detail")) {
+			while (intensity > 1) {
+				canvas = applyConvolution(canvas, KERNEL, kernel, 1);
+				intensity--;
+				fillPadding(canvas, kernel);
+			}
+		}
+		return applyConvolution(canvas, KERNEL, kernel, intensity);
+	}
+
+	private BufferedImage applyConvolution(BufferedImage canvas, double[][] KERNEL, Kernel kernel, int intensity) {
+		double FACTOR = kernel.getFactor();
+		int PAD = (kernel.getMatrix().length - 1) / 2;
 
 		int w = canvas.getWidth();
 		int h = canvas.getHeight();
@@ -47,16 +51,16 @@ public class Convolution {
 						int green = (RGB >> 8) & 0xFF;
 						int blue = RGB & 0xFF;
 
-						// Multiply each color component by the corresponding kernel coefficient
-						sumR += KERNEL[k][l] * red;
-						sumG += KERNEL[k][l] * green;
-						sumB += KERNEL[k][l] * blue;
+						// Multiply each color component by the corresponding kernel entry
+						sumR += (int) KERNEL[k][l] * intensity * red;
+						sumG += (int) KERNEL[k][l] * intensity * green;
+						sumB += (int) KERNEL[k][l] * intensity * blue;
 					}
 				}
 
-				int r = Math.min(Math.max((sumR / FACTOR), 0), 255);
-				int g = Math.min(Math.max((sumG / FACTOR), 0), 255);
-				int b = Math.min(Math.max((sumB / FACTOR), 0), 255);
+				int r = (int) Math.min(Math.max((sumR / FACTOR), 0), 255);
+				int g = (int) Math.min(Math.max((sumG / FACTOR), 0), 255);
+				int b = (int) Math.min(Math.max((sumB / FACTOR), 0), 255);
 
 				int filteredRGB = genRGB(r, g, b);
 				filtered.setRGB(i, j, filteredRGB);
@@ -66,7 +70,7 @@ public class Convolution {
 	}
 
 	// converts image to bufferedImage, adds EMPTY padding
-	private BufferedImage convertType(Image image, Kernel kernel) {
+	private BufferedImage addPadding(Image image, Kernel kernel) {
 		int PAD = (kernel.getMatrix().length - 1) / 2;
 		int w = image.getWidth(null) + 2 * PAD;
 		int h = image.getHeight(null) + 2 * PAD;
@@ -166,12 +170,12 @@ public class Convolution {
 		return (255 << 24) | (R << 16) | (G << 8) | B;
 	}
 
-	private int[][] transposeAndInvert(Kernel kernel) {
-		int[][] matrix = kernel.getMatrix();
+	private double[][] transposeAndInvert(Kernel kernel) {
+		double[][] matrix = kernel.getMatrix();
 		int l = matrix.length;
 
-		int[][] transMatrix = new int[l][l];
-		int[][] invMatrix = new int[l][l];
+		double[][] transMatrix = new double[l][l];
+		double[][] invMatrix = new double[l][l];
 
 		// transposes the matrix
 		for (int i = 0; i < matrix.length; i++) {
@@ -180,7 +184,7 @@ public class Convolution {
 			}
 		}
 
-		// inverts matrix horizontally for top/bottom and vertically for left/right
+		// inverts matrix horizontally for top/bottom sobel and vertically for left/right sobel
 		if (kernel.getType().equals("sobelV")) {
 			for (int i = 0; i < l; i++) {
 				for (int j = 0; j < l; j++) {
