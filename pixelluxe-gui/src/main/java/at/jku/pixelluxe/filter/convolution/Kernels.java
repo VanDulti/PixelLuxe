@@ -10,7 +10,15 @@ public class Kernels {
 					{0, -1, 0},
 					{-1, 5, -1},
 					{0, -1, 0}
-			}, 1, "sharp"
+			}, 1, "detail"
+	);
+
+	public static Kernel emboss = new Kernel(
+			new int[][]{
+					{-2, -1, 0},
+					{-1, 1, 1},
+					{0, 1, 2}
+			}, 1, "detail"
 	);
 
 	public static Kernel gauss = new Kernel(
@@ -18,7 +26,7 @@ public class Kernels {
 					{1, 2, 1},
 					{2, 4, 2},
 					{1, 2, 1}
-			}, 16, "blur"
+			}, 16, "detail"
 	);
 
 	public static Kernel meanBlur = new Kernel(
@@ -26,7 +34,7 @@ public class Kernels {
 					{1, 1, 1},
 					{1, 1, 1},
 					{1, 1, 1}
-			}, 9, "blur"
+			}, 9, "detail"
 	);
 
 	// --------------------------------------
@@ -56,14 +64,6 @@ public class Kernels {
 			}, 1, "edge"
 	);
 
-	public static Kernel emboss = new Kernel(
-			new int[][]{
-					{-2, -1, 0},
-					{-1, 1, 1},
-					{0, 1, 2}
-			}, 1, "emboss"
-	);
-
 	public static Kernel outline = new Kernel(
 			new int[][]{
 					{-1, -1, -1},
@@ -80,7 +80,7 @@ public class Kernels {
 					{-1, -2, -1},
 					{0, 0, 0},
 					{1, 2, 1}
-			}, 1, "sobelV"
+			}, 1, "sobelH"
 	);
 
 	public static Kernel topSobel = new Kernel(
@@ -88,7 +88,7 @@ public class Kernels {
 					{1, 2, 1},
 					{0, 0, 0},
 					{-1, -2, -1}
-			}, 1, "sobelV"
+			}, 1, "sobelH"
 	);
 
 	public static Kernel rightSobel = new Kernel(
@@ -96,7 +96,7 @@ public class Kernels {
 					{-1, 0, 1},
 					{-2, 0, 2},
 					{-1, 0, 1}
-			}, 1, "sobelH"
+			}, 1, "sobelV"
 	);
 
 	public static Kernel leftSobel = new Kernel(
@@ -104,6 +104,6 @@ public class Kernels {
 					{1, 0, -1},
 					{2, 0, -2},
 					{1, 0, -1}
-			}, 1, "sobelH"
+			}, 1, "sobelV"
 	);
 }

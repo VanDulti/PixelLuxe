@@ -10,12 +10,14 @@ public class FilterMenu extends JMenu implements Component<JMenu> {
 	private final Runnable onInvert;
 	private final Runnable onContrast;
 	private final Runnable onSaturation;
+	private final Runnable onGrayScale;
 
-	public FilterMenu(Runnable onInvert, Runnable onContrast, Runnable onSaturation) {
+	public FilterMenu(Runnable onInvert, Runnable onContrast, Runnable onSaturation, Runnable onGrayScale) {
 		super("Filter");
 		this.onInvert = onInvert;
 		this.onContrast = onContrast;
 		this.onSaturation = onSaturation;
+		this.onGrayScale = onGrayScale;
 	}
 
 	@Override
@@ -32,9 +34,14 @@ public class FilterMenu extends JMenu implements Component<JMenu> {
 		saturationBtn.addActionListener(action -> onSaturation.run());
 		saturationBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.ALT_DOWN_MASK));
 
+		JMenuItem grayScaleBtn = new JMenuItem("Gray Scale", KeyEvent.VK_G);
+		grayScaleBtn.addActionListener(action -> onGrayScale.run());
+		grayScaleBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, InputEvent.ALT_DOWN_MASK));
+
 		add(invertBtn);
 		add(contrastBtn);
 		add(saturationBtn);
+		add(grayScaleBtn);
 		return this;
 	}
 }

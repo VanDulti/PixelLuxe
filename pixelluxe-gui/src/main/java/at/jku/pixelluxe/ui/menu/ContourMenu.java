@@ -10,15 +10,13 @@ public class ContourMenu extends JMenu implements Component<JMenu> {
 	private final Runnable onHorizontal;
 	private final Runnable onVertical;
 	private final Runnable onLaplace;
-	private final Runnable onEmboss;
 	private final Runnable onOutline;
 
-	public ContourMenu(Runnable onHorizontal, Runnable onVertical, Runnable onLaplace, Runnable onEmboss, Runnable onOutline) {
+	public ContourMenu(Runnable onHorizontal, Runnable onVertical, Runnable onLaplace, Runnable onOutline) {
 		super("Contour");
 		this.onHorizontal = onHorizontal;
 		this.onVertical = onVertical;
 		this.onLaplace = onLaplace;
-		this.onEmboss = onEmboss;
 		this.onOutline = onOutline;
 	}
 
@@ -36,18 +34,13 @@ public class ContourMenu extends JMenu implements Component<JMenu> {
 		laplaceBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_3, InputEvent.SHIFT_DOWN_MASK));
 		laplaceBtn.addActionListener(action -> onLaplace.run());
 
-		JMenuItem embossBtn = new JMenuItem("Emboss", KeyEvent.VK_4);
-		embossBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_4, InputEvent.SHIFT_DOWN_MASK));
-		embossBtn.addActionListener(action -> onEmboss.run());
-
-		JMenuItem outlineBtn = new JMenuItem("Outline", KeyEvent.VK_5);
-		outlineBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_5, InputEvent.SHIFT_DOWN_MASK));
+		JMenuItem outlineBtn = new JMenuItem("Outline", KeyEvent.VK_4);
+		outlineBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_4, InputEvent.SHIFT_DOWN_MASK));
 		outlineBtn.addActionListener(action -> onOutline.run());
 
 		add(xEdgeBtn);
 		add(yEdgeBtn);
 		add(laplaceBtn);
-		add(embossBtn);
 		add(outlineBtn);
 		return this;
 	}

@@ -11,14 +11,14 @@ import java.util.Hashtable;
  * Defines the Dialog which pops up when the Draw Button is pressed
  */
 
-public class IntesityDialog {
+public class IntensityDialog {
 	private final JDialog dialog;
-	private int intesity;
+	private int intensity;
 	private JSlider slider;
 
 
-	public IntesityDialog(JFrame frame, int width, int height) {
-		this.dialog = new JDialog(frame, "IntesityDialog", true);
+	public IntensityDialog(JFrame frame, int width, int height) {
+		this.dialog = new JDialog(frame, "Select Intensity", true);
 		dialog.setSize(width, height);
 		addComponents();
 	}
@@ -30,7 +30,7 @@ public class IntesityDialog {
 
 	private void createDrawSlider(int min, int max, int startValue) {
 		slider = new JSlider(JSlider.HORIZONTAL, min, max, startValue);
-		//
+
 		Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
 		for (int i = slider.getMinimum(); i <= slider.getMaximum(); i++) {
 			labelTable.put(i, new JLabel("" + i));
@@ -52,7 +52,7 @@ public class IntesityDialog {
 
 				if (label.equals("Submit")) {
 					// Save changes here
-					intesity = slider.getValue();
+					intensity = slider.getValue();
 				}
 
 
@@ -67,7 +67,7 @@ public class IntesityDialog {
 		dialog.setVisible(true);
 	}
 
-	public int getIntesity() {
-		return intesity * 2;
+	public int getIntensity() {
+		return intensity * 2;
 	}
 }

@@ -8,12 +8,14 @@ import java.awt.event.KeyEvent;
 
 public class DetailMenu extends JMenu implements Component<JMenu> {
 	private final Runnable onSharpen;
+	private final Runnable onEmboss;
 	private final Runnable onGauss;
 	private final Runnable onMeanBlur;
 
-	public DetailMenu(Runnable onSharpen, Runnable onGauss, Runnable onMeanBlur) {
+	public DetailMenu(Runnable onSharpen, Runnable onEmboss, Runnable onGauss, Runnable onMeanBlur) {
 		super("Detail");
 		this.onSharpen = onSharpen;
+		this.onEmboss = onEmboss;
 		this.onGauss = onGauss;
 		this.onMeanBlur = onMeanBlur;
 	}
@@ -24,15 +26,20 @@ public class DetailMenu extends JMenu implements Component<JMenu> {
 		sharpenBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.CTRL_DOWN_MASK));
 		sharpenBtn.addActionListener(action -> onSharpen.run());
 
-		JMenuItem gaussBtn = new JMenuItem("Gaussian Blur", KeyEvent.VK_2);
-		gaussBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, InputEvent.CTRL_DOWN_MASK));
+		JMenuItem embossBtn = new JMenuItem("Emboss", KeyEvent.VK_2);
+		embossBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, InputEvent.CTRL_DOWN_MASK));
+		embossBtn.addActionListener(action -> onEmboss.run());
+
+		JMenuItem gaussBtn = new JMenuItem("Gaussian Blur", KeyEvent.VK_3);
+		gaussBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_3, InputEvent.CTRL_DOWN_MASK));
 		gaussBtn.addActionListener(action -> onGauss.run());
 
-		JMenuItem meanBlurBtn = new JMenuItem("Mean Blur", KeyEvent.VK_3);
-		meanBlurBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_3, InputEvent.CTRL_DOWN_MASK));
+		JMenuItem meanBlurBtn = new JMenuItem("Mean Blur", KeyEvent.VK_4);
+		meanBlurBtn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_4, InputEvent.CTRL_DOWN_MASK));
 		meanBlurBtn.addActionListener(action -> onMeanBlur.run());
 
 		add(sharpenBtn);
+		add(embossBtn);
 		add(gaussBtn);
 		add(meanBlurBtn);
 		return this;

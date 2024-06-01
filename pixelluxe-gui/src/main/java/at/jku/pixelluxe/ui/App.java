@@ -8,7 +8,8 @@ import at.jku.pixelluxe.image.ImageFile;
 import at.jku.pixelluxe.image.Model;
 import at.jku.pixelluxe.image.PaintableImage;
 import at.jku.pixelluxe.image.SimplePaintableImage;
-import at.jku.pixelluxe.ui.dialog.IntesityDialog;
+import at.jku.pixelluxe.ui.dialog.IntensityDialog;
+import at.jku.pixelluxe.ui.dialog.ConvIntensityDialog;
 import at.jku.pixelluxe.ui.menu.*;
 
 import javax.imageio.ImageIO;
@@ -57,17 +58,18 @@ public class App extends JPanel {
 			new FilterMenu(
 					this::onInvertPressed,
 					this::onContrastPressed,
-					this::onSaturationPressed
+					this::onSaturationPressed,
+					this::onGrayScalePressed
 			),
 			new ContourMenu(
 					this::onHorizontalPressed,
 					this::onVerticalPressed,
 					this::onLaplacePressed,
-					this::onEmbossPressed,
 					this::onOutlinePressed
 			),
 			new DetailMenu(
 					this::onSharpenPressed,
+					this::onEmbossPressed,
 					this::onGaussPressed,
 					this::onMeanBlurPressed
 			),
@@ -108,7 +110,7 @@ public class App extends JPanel {
 
 	private void addSampleImage() {
 		try {
-			URL lenna = Objects.requireNonNull(getClass().getClassLoader().getResource("lenna.png"));
+			URL lenna = Objects.requireNonNull(getClass().getClassLoader().getResource("maisonCarree.jpg"));
 			BufferedImage image = ImageIO.read(lenna);
 			PaintableImage paintableImage = new SimplePaintableImage(image);
 			ImageFile imageFile = new ImageFile(paintableImage, Optional.empty());
@@ -248,7 +250,7 @@ public class App extends JPanel {
 	}
 
 	private int getIntensity() {
-		return new IntesityDialog(App.getMainFrame(), 200, 150).getIntesity();
+		return new IntensityDialog(App.getMainFrame(), 200, 150).getIntensity();
 	}
 
 	public static JFrame getMainFrame() {
@@ -272,10 +274,22 @@ public class App extends JPanel {
 		});
 	}
 
+	private void onGrayScalePressed() {
+		executorService.submit(() -> {
+			Model model = this.model.get();
+			BufferedImage bi = new Filter().grayScale(model.imageFiles().get(selectedImage).image().image());
+			updatePaintable(new SimplePaintableImage(bi), true);
+		});
+	}
+
+	private int getConvIntensity() {
+		return new ConvIntensityDialog(App.getMainFrame(), 200, 110).getConvIntensity();
+	}
+
 	private void applyKernel(Kernel kernel) {
 		executorService.submit(() -> {
 			Model model = this.model.get();
-			BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), kernel);
+			BufferedImage bi = new Convolution().filter(model.imageFiles().get(selectedImage).image().image(), kernel, getConvIntensity());
 			updatePaintable(new SimplePaintableImage(bi), true);
 		});
 	}
@@ -292,16 +306,16 @@ public class App extends JPanel {
 		applyKernel(Kernels.laplace);
 	}
 
-	private void onEmbossPressed() {
-		applyKernel(Kernels.emboss);
-	}
-
 	private void onOutlinePressed() {
 		applyKernel(Kernels.outline);
 	}
 
 	private void onSharpenPressed() {
 		applyKernel(Kernels.sharpen);
+	}
+
+	private void onEmbossPressed() {
+		applyKernel(Kernels.emboss);
 	}
 
 	private void onGaussPressed() {
