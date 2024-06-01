@@ -4,9 +4,7 @@ import at.jku.pixelluxe.image.ImageFile;
 import at.jku.pixelluxe.image.PaintableImage;
 import at.jku.pixelluxe.ui.menu.ColorPane;
 import at.jku.pixelluxe.ui.tabs.DefaultTab;
-import at.jku.pixelluxe.ui.tools.Brush;
-import at.jku.pixelluxe.ui.tools.ColorPicker;
-import at.jku.pixelluxe.ui.tools.Eraser;
+import at.jku.pixelluxe.ui.tools.*;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -43,6 +41,26 @@ public class Body extends JPanel {
 		JButton eraseBtn = new JButton("Erase");
 		mainToolBar.add(eraseBtn);
 		eraseBtn.addActionListener(new Eraser.EraserActionListener(tabPane));
+
+		JButton rectSelectBtn = new JButton("Rectangle Select");
+		mainToolBar.add(rectSelectBtn);
+		rectSelectBtn.addActionListener((e -> {
+			int selectIndex = tabPane.getSelectedIndex();
+			Component c = tabPane.getComponentAt(selectIndex);
+			if (c instanceof WorkingArea workingArea) {
+				workingArea.setTool(new RectangularSelectionTool());
+			}
+		}));
+
+		JButton freehandSelectBtn = new JButton("Freehand Select");
+		mainToolBar.add(freehandSelectBtn);
+		freehandSelectBtn.addActionListener(e -> {
+			int selectIndex = tabPane.getSelectedIndex();
+			Component c = tabPane.getComponentAt(selectIndex);
+			if (c instanceof WorkingArea workingArea) {
+				workingArea.setTool(new FreehandSelectionTool());
+			}
+		});
 
 		ColorPane colorPane = new ColorPane();
 		colorPane.addTo(mainToolBar);
@@ -93,6 +111,7 @@ public class Body extends JPanel {
 			workingArea.takeSnapshot();
 		}
 	}
+
 
 
 	public void removeActiveTab() {
