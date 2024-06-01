@@ -30,7 +30,7 @@ public class Convolution {
 	}
 
 	private BufferedImage applyConvolution(BufferedImage canvas, int[][] KERNEL, Kernel kernel, int intensity) {
-		double FACTOR = kernel.getFactor();
+		int FACTOR = kernel.getFactor();
 		int PAD = (kernel.getMatrix().length - 1) / 2;
 
 		int w = canvas.getWidth();
@@ -52,15 +52,15 @@ public class Convolution {
 						int blue = RGB & 0xFF;
 
 						// Multiply each color component by the corresponding kernel entry
-						sumR += (int) KERNEL[k][l] * intensity * red;
-						sumG += (int) KERNEL[k][l] * intensity * green;
-						sumB += (int) KERNEL[k][l] * intensity * blue;
+						sumR += KERNEL[k][l] * intensity * red;
+						sumG += KERNEL[k][l] * intensity * green;
+						sumB += KERNEL[k][l] * intensity * blue;
 					}
 				}
 
-				int r = (int) Math.min(Math.max((sumR / FACTOR), 0), 255);
-				int g = (int) Math.min(Math.max((sumG / FACTOR), 0), 255);
-				int b = (int) Math.min(Math.max((sumB / FACTOR), 0), 255);
+				int r = Math.min(Math.max((sumR / FACTOR), 0), 255);
+				int g = Math.min(Math.max((sumG / FACTOR), 0), 255);
+				int b = Math.min(Math.max((sumB / FACTOR), 0), 255);
 
 				int filteredRGB = genRGB(r, g, b);
 				filtered.setRGB(i, j, filteredRGB);

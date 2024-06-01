@@ -3,7 +3,7 @@ package at.jku.pixelluxe.filter.convolution;
 public class Kernel {
 	private final String type;
 	private final int[][] matrix;
-	private final double factor;
+	private final int factor;
 
 	public Kernel(int[][] matrix, int factor, String type) {
 		this.type = type;
@@ -15,7 +15,7 @@ public class Kernel {
 		return matrix;
 	}
 
-	public double getFactor() {
+	public int getFactor() {
 		return factor;
 	}
 
