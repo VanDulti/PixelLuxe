@@ -15,7 +15,6 @@ import java.util.function.Consumer;
 
 public class Body extends JPanel {
 	private final JTabbedPane tabPane;
-	private ColorPicker colorPicker = null;
 	private final Consumer<Integer> onTabSelectionChanged;
 	private final DefaultTab defaultTab = new DefaultTab();
 
@@ -25,7 +24,7 @@ public class Body extends JPanel {
 	}
 
 	public void initialize() {
-		colorPicker = new ColorPicker();
+		ColorPicker colorPicker = new ColorPicker();
 		setLayout(new BorderLayout(16, 16));
 
 		JPanel toolbarPanel = new JPanel();
@@ -37,6 +36,7 @@ public class Body extends JPanel {
 		JButton drawBtn = new JButton("Draw");
 		mainToolBar.add(drawBtn);
 		drawBtn.addActionListener(new Brush.BrushActionListener(tabPane, colorPicker));
+		mainToolBar.setMargin(new Insets(0,9,0,0));
 
 		JButton eraseBtn = new JButton("Erase");
 		mainToolBar.add(eraseBtn);
@@ -71,9 +71,6 @@ public class Body extends JPanel {
 
 		JToolBar supplementaryToolBar = new JToolBar();
 		supplementaryToolBar.setFloatable(false);
-
-		JButton anotherButton = new JButton("Click me too!");
-		supplementaryToolBar.add(anotherButton);
 
 		tabPane.addChangeListener(this::selectionChanged);
 		tabPane.addTab("Default tab", defaultTab.initialize());
