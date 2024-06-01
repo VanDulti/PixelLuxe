@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 
 public class Convolution {
 	public BufferedImage filter(BufferedImage canvas, Kernel kernel, int intensity) {
-		double[][] KERNEL = kernel.getMatrix();
+		int[][] KERNEL = kernel.getMatrix();
 		String type = kernel.getType();
 		fillPadding(addPadding(canvas, kernel), kernel);
 
@@ -29,7 +29,7 @@ public class Convolution {
 		return applyConvolution(canvas, KERNEL, kernel, intensity);
 	}
 
-	private BufferedImage applyConvolution(BufferedImage canvas, double[][] KERNEL, Kernel kernel, int intensity) {
+	private BufferedImage applyConvolution(BufferedImage canvas, int[][] KERNEL, Kernel kernel, int intensity) {
 		double FACTOR = kernel.getFactor();
 		int PAD = (kernel.getMatrix().length - 1) / 2;
 
@@ -170,12 +170,12 @@ public class Convolution {
 		return (255 << 24) | (R << 16) | (G << 8) | B;
 	}
 
-	private double[][] transposeAndInvert(Kernel kernel) {
-		double[][] matrix = kernel.getMatrix();
+	private int[][] transposeAndInvert(Kernel kernel) {
+		int[][] matrix = kernel.getMatrix();
 		int l = matrix.length;
 
-		double[][] transMatrix = new double[l][l];
-		double[][] invMatrix = new double[l][l];
+		int[][] transMatrix = new int[l][l];
+		int[][] invMatrix = new int[l][l];
 
 		// transposes the matrix
 		for (int i = 0; i < matrix.length; i++) {

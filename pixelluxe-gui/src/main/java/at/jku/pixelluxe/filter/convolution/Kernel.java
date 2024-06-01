@@ -2,16 +2,16 @@ package at.jku.pixelluxe.filter.convolution;
 
 public class Kernel {
 	private final String type;
-	private final double[][] matrix;
+	private final int[][] matrix;
 	private final double factor;
 
-	public Kernel(double[][] matrix, int factor, String type) {
+	public Kernel(int[][] matrix, int factor, String type) {
 		this.type = type;
 		this.matrix = matrix;
 		this.factor = factor;
 	}
 
-	public double[][] getMatrix() {
+	public int[][] getMatrix() {
 		return matrix;
 	}
 

@@ -6,7 +6,7 @@ public class Kernels {
 	//				Sharpen/Blur
 	// --------------------------------------
 	public static Kernel sharpen = new Kernel(
-			new double[][]{
+			new int[][]{
 					{0, -1, 0},
 					{-1, 5, -1},
 					{0, -1, 0}
@@ -14,7 +14,7 @@ public class Kernels {
 	);
 
 	public static Kernel emboss = new Kernel(
-			new double[][]{
+			new int[][]{
 					{-2, -1, 0},
 					{-1, 1, 1},
 					{0, 1, 2}
@@ -22,7 +22,7 @@ public class Kernels {
 	);
 
 	public static Kernel gauss = new Kernel(
-			new double[][]{
+			new int[][]{
 					{1, 2, 1},
 					{2, 4, 2},
 					{1, 2, 1}
@@ -30,7 +30,7 @@ public class Kernels {
 	);
 
 	public static Kernel meanBlur = new Kernel(
-			new double[][]{
+			new int[][]{
 					{1, 1, 1},
 					{1, 1, 1},
 					{1, 1, 1}
@@ -41,7 +41,7 @@ public class Kernels {
 	//				Edge Detection
 	// --------------------------------------
 	public static Kernel horizontal = new Kernel(
-			new double[][]{
+			new int[][]{
 					{-1, 0, 1},
 					{-1, 0, 1},
 					{-1, 0, 1}
@@ -49,7 +49,7 @@ public class Kernels {
 	);
 
 	public static Kernel vertical = new Kernel(
-			new double[][]{
+			new int[][]{
 					{-1, -1, -1},
 					{0, 0, 0},
 					{1, 1, 1}
@@ -57,7 +57,7 @@ public class Kernels {
 	);
 
 	public static Kernel laplace = new Kernel(
-			new double[][]{
+			new int[][]{
 					{0, 1, 0},
 					{1, -4, 1},
 					{0, 1, 0}
@@ -65,7 +65,7 @@ public class Kernels {
 	);
 
 	public static Kernel outline = new Kernel(
-			new double[][]{
+			new int[][]{
 					{-1, -1, -1},
 					{-1, 8, -1},
 					{-1, -1, -1}
@@ -76,7 +76,7 @@ public class Kernels {
 	//					Sobel
 	// --------------------------------------
 	public static Kernel bottomSobel = new Kernel(
-			new double[][]{
+			new int[][]{
 					{-1, -2, -1},
 					{0, 0, 0},
 					{1, 2, 1}
@@ -84,7 +84,7 @@ public class Kernels {
 	);
 
 	public static Kernel topSobel = new Kernel(
-			new double[][]{
+			new int[][]{
 					{1, 2, 1},
 					{0, 0, 0},
 					{-1, -2, -1}
@@ -92,7 +92,7 @@ public class Kernels {
 	);
 
 	public static Kernel rightSobel = new Kernel(
-			new double[][]{
+			new int[][]{
 					{-1, 0, 1},
 					{-2, 0, 2},
 					{-1, 0, 1}
@@ -100,7 +100,7 @@ public class Kernels {
 	);
 
 	public static Kernel leftSobel = new Kernel(
-			new double[][]{
+			new int[][]{
 					{1, 0, -1},
 					{2, 0, -2},
 					{1, 0, -1}
