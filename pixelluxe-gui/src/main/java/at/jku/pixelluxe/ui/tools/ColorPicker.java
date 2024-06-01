@@ -30,6 +30,16 @@ public class ColorPicker implements WorkingTool, Colorable {
 	}
 
 	@Override
+	public void release(PaintableImage image, int x, int y) {
+
+	}
+
+	@Override
+	public void draw(Graphics2D g) {
+
+	}
+
+	@Override
 	public String getToolName() {
 		return getClass().getName();
 	}

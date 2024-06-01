@@ -101,6 +101,10 @@ public class WorkingArea extends JPanel {
 			// kinda ugly tho
 			drawPixelGrid(g2d);
 		}
+
+		if (toolListener.getTool() != null) {
+			toolListener.getTool().draw(g2d);
+		}
 	}
 
 	public void takeSnapshot(){
@@ -155,7 +159,7 @@ public class WorkingArea extends JPanel {
 	}
 
 	/**
-		Is the Mehtod for other Classes primarly Working Area to set the Tools  the user selected
+		Is the Method for other Classes primarily Working Area to set the Tools  the user selected
 		Which will then be executed on mouse Events
 	 **/
 	public void setTool(WorkingTool tool) {
@@ -225,6 +229,12 @@ public class WorkingArea extends JPanel {
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			initialPoint = null;
+			if (tool != null) {
+				int x = getRelativeX(e.getPoint());
+				int y = getRelativeY(e.getPoint());
+				tool.release(image, x, y);
+				render();
+			}
 		}
 
 		@Override
