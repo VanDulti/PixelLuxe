@@ -42,9 +42,9 @@ public class Body extends JPanel {
 		mainToolBar.add(eraseBtn);
 		eraseBtn.addActionListener(new Eraser.EraserActionListener(tabPane));
 
-		JButton rectSelectBtn = new JButton("Rectangle Select");
-		mainToolBar.add(rectSelectBtn);
-		rectSelectBtn.addActionListener((e -> {
+		JButton selectBtn = new JButton("Select");
+		mainToolBar.add(selectBtn);
+		selectBtn.addActionListener((e -> {
 			int selectIndex = tabPane.getSelectedIndex();
 			Component c = tabPane.getComponentAt(selectIndex);
 			if (c instanceof WorkingArea workingArea) {
@@ -52,6 +52,7 @@ public class Body extends JPanel {
 			}
 		}));
 
+		/*
 		JButton freehandSelectBtn = new JButton("Freehand Select");
 		mainToolBar.add(freehandSelectBtn);
 		freehandSelectBtn.addActionListener(e -> {
@@ -61,6 +62,8 @@ public class Body extends JPanel {
 				workingArea.setTool(new FreehandSelectionTool());
 			}
 		});
+		*/
+
 
 		ColorPane colorPane = new ColorPane();
 		colorPane.addTo(mainToolBar);

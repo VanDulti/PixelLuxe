@@ -3,6 +3,7 @@ package at.jku.pixelluxe.ui;
 import at.jku.pixelluxe.image.PaintableImage;
 import at.jku.pixelluxe.image.SimplePaintableImage;
 import at.jku.pixelluxe.ui.tools.History;
+import at.jku.pixelluxe.ui.tools.RectangularSelectionTool;
 import at.jku.pixelluxe.ui.tools.WorkingTool;
 
 import javax.swing.*;
@@ -29,7 +30,7 @@ public class WorkingArea extends JPanel {
 	private double x = 0.0;
 	private double y = 0.0;
 	private double scale = 1.0;
-
+	private BufferedImage selectedImage;
 	private ToolListener toolListener;
 
 	public WorkingArea(PaintableImage image) {
@@ -234,6 +235,13 @@ public class WorkingArea extends JPanel {
 				int y = getRelativeY(e.getPoint());
 				tool.release(image, x, y);
 				render();
+
+				if (tool instanceof RectangularSelectionTool selectionTool) {
+                    Rectangle selection = selectionTool.getSelection();
+					if (selection != null) {
+						selectedImage = image.image().getSubimage(selection.x, selection.y, selection.width, selection.height);
+					}
+				}
 			}
 		}
 
@@ -350,5 +358,4 @@ public class WorkingArea extends JPanel {
 			System.out.println("Mouse wheel moved!");
 		}
 	}
-
 }
