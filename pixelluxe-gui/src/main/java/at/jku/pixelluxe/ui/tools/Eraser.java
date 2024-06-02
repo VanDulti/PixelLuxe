@@ -12,16 +12,16 @@ import java.awt.event.ActionListener;
 
 public class Eraser implements WorkingTool {
 
-	private final int widht;
+	private final int width;
 
 
-	public Eraser(int widht) {
-		this.widht = widht;
+	public Eraser(int width) {
+		this.width = width;
 	}
 
 	@Override
 	public void drag(PaintableImage image, int x1, int y1, int x2, int y2) {
-		image.eraseLine(x1, y1, x2, y2, widht);
+		image.eraseLine(x1, y1, x2, y2, width);
 	}
 
 	@Override

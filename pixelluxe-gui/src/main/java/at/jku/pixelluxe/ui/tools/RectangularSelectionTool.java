@@ -3,10 +3,11 @@ package at.jku.pixelluxe.ui.tools;
 import at.jku.pixelluxe.image.PaintableImage;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
+
 public class RectangularSelectionTool implements WorkingTool {
 	private int startX, startY, endX, endY;
 	private boolean selecting;
+	private Rectangle selection;
 
 	@Override
 	public void set(PaintableImage image, int x, int y) {
@@ -15,6 +16,7 @@ public class RectangularSelectionTool implements WorkingTool {
 		endX = x;
 		endY = y;
 		selecting = true;
+		selection = null;
 	}
 
 	@Override
@@ -33,6 +35,7 @@ public class RectangularSelectionTool implements WorkingTool {
 	@Override
 	public void release(PaintableImage image, int x, int y) {
 		selecting = false;
+		selection = new Rectangle(Math.min(startX, endX), Math.min(startY, endY), Math.abs(endX - startX), Math.abs(endY - startY));
 	}
 
 	@Override
@@ -42,5 +45,9 @@ public class RectangularSelectionTool implements WorkingTool {
 			g.setStroke(new BasicStroke(2));
 			g.drawRect(Math.min(startX, endX), Math.min(startY, endY), Math.abs(endX - startX), Math.abs(endY - startY));
 		}
+	}
+
+	public Rectangle getSelection() {
+		return selection;
 	}
 }

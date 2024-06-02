@@ -1,4 +1,4 @@
-package at.jku.pixelluxe.ui.tools;
+/* package at.jku.pixelluxe.ui.tools;
 
 import at.jku.pixelluxe.image.PaintableImage;
 
@@ -54,7 +54,7 @@ public class FreehandSelectionTool implements WorkingTool {
 
 
 
-
+*/
 
 
 
