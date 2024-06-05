@@ -43,6 +43,7 @@ public class History<E> {
 		}
 		history.removeFirst();
 		pos--;
+		add(elem);
 	}
 
 }
