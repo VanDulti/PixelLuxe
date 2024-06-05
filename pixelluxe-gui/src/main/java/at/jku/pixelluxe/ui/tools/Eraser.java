@@ -1,7 +1,6 @@
 package at.jku.pixelluxe.ui.tools;
 
 import at.jku.pixelluxe.image.PaintableImage;
-import at.jku.pixelluxe.ui.App;
 import at.jku.pixelluxe.ui.WorkingArea;
 import at.jku.pixelluxe.ui.dialog.DrawDialog;
 
@@ -26,7 +25,7 @@ public class Eraser implements WorkingTool {
 
 	@Override
 	public void set(PaintableImage image, int x1, int y1) {
-    }
+	}
 
 	@Override
 	public void release(PaintableImage image, int x, int y) {
@@ -36,11 +35,6 @@ public class Eraser implements WorkingTool {
 	@Override
 	public void draw(Graphics2D g) {
 
-	}
-
-	@Override
-	public String getToolName() {
-		return getClass().getName();
 	}
 
 	public static class EraserActionListener implements ActionListener {
@@ -59,7 +53,7 @@ public class Eraser implements WorkingTool {
 				return;
 			}
 
-			DrawDialog drawDialog = new DrawDialog(App.getMainFrame(), 200, 150);
+			DrawDialog drawDialog = new DrawDialog(null, 200, 150);
 			int eraserWidth = drawDialog.getBrushWidth();
 			Eraser eraser = new Eraser(eraserWidth);
 			workingArea.setTool(eraser);

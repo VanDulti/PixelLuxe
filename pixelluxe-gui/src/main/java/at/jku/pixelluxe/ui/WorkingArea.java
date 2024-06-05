@@ -1,7 +1,6 @@
 package at.jku.pixelluxe.ui;
 
 import at.jku.pixelluxe.image.PaintableImage;
-import at.jku.pixelluxe.image.SimplePaintableImage;
 import at.jku.pixelluxe.ui.tools.History;
 import at.jku.pixelluxe.ui.tools.RectangularSelectionTool;
 import at.jku.pixelluxe.ui.tools.WorkingTool;
@@ -20,13 +19,13 @@ public class WorkingArea extends JPanel {
 	public static final long MIN_FRAME_TIME_MILLIS = (long) (1000.0 / MIN_FRAMES_PER_SECOND);
 	private static final int MINIMAL_VISIBLE_SPACE = 10;
 	private static final int PIXEL_GRID_SCALE_THRESHOLD = 20;
+	public History<PaintableImage> historyObj;
 	/**
 	 * The buffered image to be displayed. The actual content should then be drawn on-top of that BufferedImage (actual
 	 * image, filters, layers, raw painting) as this is supposed to be more efficient than drawing directly on the
 	 * JPanel.
 	 */
 	private PaintableImage image;
-	public History<PaintableImage> historyObj;
 	private double x = 0.0;
 	private double y = 0.0;
 	private double scale = 1.0;
@@ -38,28 +37,24 @@ public class WorkingArea extends JPanel {
 		setDoubleBuffered(true);
 	}
 
-	private static void setPixelGridRenderingHints(Graphics2D g2d) {
-		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
-		g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_SPEED);
-	}
-
 	public BufferedImage getImage() {
 		return image.image();
 	}
 
 	public void setImage(PaintableImage image) {
-		this.image =image;
+		this.image = image;
 		render();
 	}
 
+	void render() {
+		repaint(MIN_FRAME_TIME_MILLIS);
+	}
 
 	public void initialize() {
 		setLayout(null);
 		setBackground(Color.LIGHT_GRAY);
 		addListeners();
-		historyObj = new History((PaintableImage)image.cloneImage(), 128);
+		historyObj = new History<>(image.cloneImage(), 128);
 	}
 
 	public void addListeners() {
@@ -78,10 +73,6 @@ public class WorkingArea extends JPanel {
 
 		addMouseWheelListener(new MouseWheelListener());
 		addComponentListener(new ComponentListener());
-	}
-
-	void render() {
-		repaint(MIN_FRAME_TIME_MILLIS);
 	}
 
 	@Override
@@ -108,9 +99,11 @@ public class WorkingArea extends JPanel {
 		}
 	}
 
-	public void takeSnapshot(){
-		historyObj.add((PaintableImage) image.cloneImage());
-		render();
+	private static void setPixelGridRenderingHints(Graphics2D g2d) {
+		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
+		g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_SPEED);
 	}
 
 	/**
@@ -138,6 +131,11 @@ public class WorkingArea extends JPanel {
 		return (Graphics2D) super.getGraphics();
 	}
 
+	public void takeSnapshot() {
+		historyObj.add(image.cloneImage());
+		render();
+	}
+
 	private void restrictBounds() {
 		int imageHeight = (int) (image.getHeight() * scale);
 		int imageWidth = (int) (image.getWidth() * scale);
@@ -160,38 +158,36 @@ public class WorkingArea extends JPanel {
 	}
 
 	/**
-		Is the Method for other Classes primarily Working Area to set the Tools  the user selected
-		Which will then be executed on mouse Events
+	 * Is the Method for other Classes primarily Working Area to set the Tools  the user selected Which will then be
+	 * executed on mouse Events
 	 **/
 	public void setTool(WorkingTool tool) {
 		toolListener.setTool(tool);
 	}
 
-	private class KeyListener extends KeyAdapter {
-		@Override
-		public void keyPressed(KeyEvent e) {
-			if(e.isControlDown() && e.getKeyCode() == 90) {
-				undo();
-			}
-
-			if(e.isControlDown()  && e.getKeyCode() == 89) {
-				redo();
-			}
-		}
-	}
-
 	public void redo() {
 		PaintableImage newImage = historyObj.resume();
 		image = newImage.cloneImage();
-		render();
-		app.updateFromHistory(image);
+		app.updateAndRepaint(image);
 	}
 
 	public void undo() {
 		PaintableImage newImage = historyObj.rollBack();
 		image = newImage.cloneImage();
-		render();
-		app.updateFromHistory(image);
+		app.updateAndRepaint(image);
+	}
+
+	private class KeyListener extends KeyAdapter {
+		@Override
+		public void keyPressed(KeyEvent e) {
+			if (e.isControlDown() && e.getKeyCode() == 90) {
+				undo();
+			}
+
+			if (e.isControlDown() && e.getKeyCode() == 89) {
+				redo();
+			}
+		}
 	}
 
 	private class ComponentListener extends ComponentAdapter {
@@ -237,7 +233,7 @@ public class WorkingArea extends JPanel {
 				render();
 
 				if (tool instanceof RectangularSelectionTool selectionTool) {
-                    Rectangle selection = selectionTool.getSelection();
+					Rectangle selection = selectionTool.getSelection();
 					if (selection != null) {
 						selectedImage = image.image().getSubimage(selection.x, selection.y, selection.width, selection.height);
 					}
@@ -291,10 +287,6 @@ public class WorkingArea extends JPanel {
 	private class ImageDragListener extends MouseAdapter {
 		private Point initialPoint = null;
 
-		private static boolean isDragKeyDown(MouseEvent e) {
-			return e.isControlDown();
-		}
-
 		@Override
 		public void mousePressed(MouseEvent e) {
 			initialPoint = e.getPoint();
@@ -323,19 +315,15 @@ public class WorkingArea extends JPanel {
 
 			render();
 		}
+
+		private static boolean isDragKeyDown(MouseEvent e) {
+			return e.isControlDown();
+		}
 	}
 
 	private class MouseWheelListener extends MouseAdapter {
 		private static final double MIN_SCALE = 0.1;
 		private static final double MAX_SCALE = 30.0;
-
-		private static boolean isZoomKeyDown(MouseWheelEvent e) {
-			return e.isAltDown();
-		}
-
-		private static boolean isHorizontalTranslationKeyDown(MouseWheelEvent e) {
-			return e.isShiftDown();
-		}
 
 		@Override
 		public void mouseWheelMoved(MouseWheelEvent e) {
@@ -356,6 +344,14 @@ public class WorkingArea extends JPanel {
 			restrictBounds();
 			render();
 			System.out.println("Mouse wheel moved!");
+		}
+
+		private static boolean isZoomKeyDown(MouseWheelEvent e) {
+			return e.isAltDown();
+		}
+
+		private static boolean isHorizontalTranslationKeyDown(MouseWheelEvent e) {
+			return e.isShiftDown();
 		}
 	}
 }

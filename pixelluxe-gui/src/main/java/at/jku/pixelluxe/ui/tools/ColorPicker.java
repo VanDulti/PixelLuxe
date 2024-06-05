@@ -39,11 +39,6 @@ public class ColorPicker implements WorkingTool, Colorable {
 
 	}
 
-	@Override
-	public String getToolName() {
-		return getClass().getName();
-	}
-
 	public Color getColor() {
 		return color;
 	}
@@ -74,7 +69,7 @@ public class ColorPicker implements WorkingTool, Colorable {
 				return;
 			}
 
-			ColorDialog colorDialog = new ColorDialog(App.getMainFrame(), 600, 500);
+			ColorDialog colorDialog = new ColorDialog(null, 600, 500);
 
 			Color newColor = colorDialog.getColor();
 			//Set Background Color

@@ -45,11 +45,6 @@ public class Brush implements WorkingTool, Colorable {
 	}
 
 	@Override
-	public String getToolName() {
-		return getClass().getName();
-	}
-
-	@Override
 	public Color getColor() {
 		return color;
 	}
@@ -78,7 +73,7 @@ public class Brush implements WorkingTool, Colorable {
 				return;
 			}
 
-			DrawDialog drawDialog = new DrawDialog(App.getMainFrame(), 200, 150);
+			DrawDialog drawDialog = new DrawDialog(null, 200, 150);
 			int brushWidth = drawDialog.getBrushWidth();
 			Brush brush = new Brush(brushWidth, colorPicker.getColor());
 			workingArea.setTool(brush);
