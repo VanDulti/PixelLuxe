@@ -263,7 +263,8 @@ public class WorkingArea extends JPanel {
 	public void redo() {
 		PaintableImage newImage = historyObj.resume();
 		image = newImage.copy();
-		app.updateAndRepaint(image);
+		render();
+		app.update(image);
 	}
 
 	/**
@@ -272,7 +273,8 @@ public class WorkingArea extends JPanel {
 	public void undo() {
 		PaintableImage newImage = historyObj.rollBack();
 		image = newImage.copy();
-		app.updateAndRepaint(image);
+		render();
+		app.update(image);
 	}
 
 	/**
