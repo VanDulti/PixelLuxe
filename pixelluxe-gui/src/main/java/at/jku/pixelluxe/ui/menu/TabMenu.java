@@ -25,8 +25,8 @@ public class TabMenu extends JMenu implements Component<JMenu> {
 
 	@Override
 	public JMenu initialize() {
-		JMenuItem closeTabButton = new JMenuItem("Close active tab", KeyEvent.VK_W);
-		closeTabButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_DOWN_MASK));
+		JMenuItem closeTabButton = new JMenuItem("Close active tab", KeyEvent.VK_X);
+		closeTabButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK));
 		closeTabButton.addActionListener(this::closeTab);
 
 		add(closeTabButton);
