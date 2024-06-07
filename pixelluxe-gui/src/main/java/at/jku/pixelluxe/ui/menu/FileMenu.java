@@ -37,7 +37,6 @@ public class FileMenu extends JMenu implements Component<JMenu> {
 		openButton.addActionListener(action -> onOpen.run());
 		openButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
 
-		//setAcelerator does not work with Undo and Redo!!
 		JMenuItem undoButton = new JMenuItem("Undo", KeyEvent.VK_Z);
 		undoButton.addActionListener(action -> onUndo.run());
 		undoButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK));
