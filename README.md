@@ -1,5 +1,8 @@
 # PixelLuxe
 
+[![Java CI with Maven](https://github.com/VanDulti/PixelLuxe/actions/workflows/pr.yml/badge.svg)](https://github.com/VanDulti/PixelLuxe/actions/workflows/pr.yml)
+[![Deploy PixelLuxe Web to pages](https://github.com/VanDulti/PixelLuxe/actions/workflows/pages.yml/badge.svg)](https://github.com/VanDulti/PixelLuxe/actions/workflows/pages.yml)
+
 ## Introduction
 
 PixelLuxe is a simple, lightweight, and easy-to-use image editor, coded in our Multimedia Systems class at JKU, that
