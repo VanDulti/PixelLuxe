@@ -15,7 +15,6 @@ public class History<E> {
 	}
 
 	public E rollBack() {
-
 		if(pos > 0) {
 			pos=pos-1;
 			return history.get(pos);
@@ -44,6 +43,7 @@ public class History<E> {
 		}
 		history.removeFirst();
 		pos--;
+		add(elem);
 	}
 
 }

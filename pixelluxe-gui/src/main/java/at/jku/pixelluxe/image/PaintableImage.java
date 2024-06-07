@@ -2,6 +2,8 @@ package at.jku.pixelluxe.image;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.util.Objects;
 
 /**

@@ -17,30 +17,28 @@ public class DrawDialog {
 	private JSlider slider;
 
 
-	public DrawDialog(JFrame frame, int width, int height) {
+
+	public DrawDialog(JFrame frame, int width, int height, int min, int max, int thickSpacing, int startValue) {
 		this.dialog = new JDialog(frame, "DrawDialog", true);
 		dialog.setSize(width, height);
-		addComponents();
+		addComponents(min,max, thickSpacing, startValue);
 	}
 
-	private void addComponents() {
-		createDrawSlider(1, 10, 1);
+	private void addComponents(int min, int max, int thickSpacing, int startValue) {
+		createDrawSlider(min, max, thickSpacing, startValue);
 		createDialogButton("Submit");
 	}
 
-	private void createDrawSlider(int min, int max, int startValue) {
+	private void createDrawSlider(int min, int max, int thickSpacing, int startValue) {
 		slider = new JSlider(JSlider.HORIZONTAL, min, max, startValue);
 		//
-		Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
-		for (int i = slider.getMinimum(); i <= slider.getMaximum(); i++) {
-			labelTable.put(i, new JLabel("" + i));
-		}
-		slider.setMajorTickSpacing(10);
-		slider.setMinorTickSpacing(10);
-
-		slider.setLabelTable(labelTable);
+//		Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
+////		for (int i = slider.getMinimum(); i <= slider.getMaximum(); i++) {
+////			labelTable.put(i, new JLabel("" + i));
+////		}
+		slider.setMajorTickSpacing(thickSpacing);
+		//slider.setLabelTable(labelTable);
 		slider.setPaintLabels(true);
-
 		dialog.add(slider, BorderLayout.NORTH);
 	}
 
