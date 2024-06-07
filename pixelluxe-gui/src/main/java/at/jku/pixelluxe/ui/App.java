@@ -3,12 +3,12 @@ package at.jku.pixelluxe.ui;
 import at.jku.pixelluxe.filter.Filter;
 import at.jku.pixelluxe.filter.convolution.Convolution;
 import at.jku.pixelluxe.filter.convolution.Kernel;
-import at.jku.pixelluxe.filter.convolution.Kernels;
 import at.jku.pixelluxe.image.ImageFile;
 import at.jku.pixelluxe.image.Model;
 import at.jku.pixelluxe.image.PaintableImage;
 import at.jku.pixelluxe.image.SimplePaintableImage;
-import at.jku.pixelluxe.ui.dialog.ConvIntensityDialog;
+import at.jku.pixelluxe.ui.components.FileChooser;
+import at.jku.pixelluxe.ui.dialog.ConvolutionIntensityDialog;
 import at.jku.pixelluxe.ui.dialog.IntensityDialog;
 import at.jku.pixelluxe.ui.menu.*;
 
@@ -35,7 +35,6 @@ public class App extends JPanel {
 	private static final String[] READER_FILE_SUFFIXES = ImageIO.getReaderFileSuffixes();
 	private static final String[] WRITER_FILE_SUFFIXES = ImageIO.getWriterFileSuffixes();
 	private static final ExecutorService executorService = Executors.newWorkStealingPool();
-	private static JFrame mainFrame;
 	private final FileChooser fileChooser;
 	private final AtomicReference<Model> model = new AtomicReference<>(new Model(List.of()));
 	private int selectedTab = 0;
@@ -111,7 +110,7 @@ public class App extends JPanel {
 	private void initialize() {
 		menuBar.initialize();
 		body.initialize();
-		mainFrame = new JFrame("PixelLuxe");
+		JFrame mainFrame = new JFrame("PixelLuxe");
 		mainFrame.setJMenuBar(menuBar);
 		mainFrame.setContentPane(body);
 		mainFrame.setResizable(true);
@@ -334,7 +333,7 @@ public class App extends JPanel {
 	 * Called when the horizontal filter button is pressed.
 	 */
 	private void onHorizontalPressed() {
-		applyKernel(Kernels.horizontal);
+		applyKernel(Kernel.EDGE_DETECTION_HORIZONTAL);
 	}
 
 	/**
@@ -357,84 +356,84 @@ public class App extends JPanel {
 	 * @return the intensity the user selected
 	 */
 	private int getConvIntensity() {
-		return new ConvIntensityDialog(null, 200, 110).getConvIntensity();
+		return new ConvolutionIntensityDialog(null, 200, 110).getConvIntensity();
 	}
 
 	/**
 	 * Called when the vertical filter button is pressed.
 	 */
 	private void onVerticalPressed() {
-		applyKernel(Kernels.vertical);
+		applyKernel(Kernel.EDGE_DETECTION_VERTICAL);
 	}
 
 	/**
 	 * Called when the laplace filter button is pressed.
 	 */
 	private void onLaplacePressed() {
-		applyKernel(Kernels.laplace);
+		applyKernel(Kernel.EDGE_DETECTION_LAPLACIAN);
 	}
 
 	/**
 	 * Called when the outline filter button is pressed.
 	 */
 	private void onOutlinePressed() {
-		applyKernel(Kernels.outline);
+		applyKernel(Kernel.EDGE_DETECTION_OUTLINE);
 	}
 
 	/**
 	 * Called when the sharpen filter button is pressed.
 	 */
 	private void onSharpenPressed() {
-		applyKernel(Kernels.sharpen);
+		applyKernel(Kernel.SHARPEN);
 	}
 
 	/**
 	 * Called when the emboss filter button is pressed.
 	 */
 	private void onEmbossPressed() {
-		applyKernel(Kernels.emboss);
+		applyKernel(Kernel.EMBOSS);
 	}
 
 	/**
 	 * Called when the gauss filter button is pressed.
 	 */
 	private void onGaussPressed() {
-		applyKernel(Kernels.gauss);
+		applyKernel(Kernel.GAUSS);
 	}
 
 	/**
 	 * Called when the mean blur filter button is pressed.
 	 */
 	private void onMeanBlurPressed() {
-		applyKernel(Kernels.meanBlur);
+		applyKernel(Kernel.MEAN_BLUR);
 	}
 
 	/**
 	 * Called when the top sobel filter button is pressed.
 	 */
 	private void onTopSobelPressed() {
-		applyKernel(Kernels.topSobel);
+		applyKernel(Kernel.SOBEL_TOP);
 	}
 
 	/**
 	 * Called when the bottom sobel filter button is pressed.
 	 */
 	private void onBottomSobelPressed() {
-		applyKernel(Kernels.bottomSobel);
+		applyKernel(Kernel.SOBEL_BOTTOM);
 	}
 
 	/**
 	 * Called when the left sobel filter button is pressed.
 	 */
 	private void onLeftSobelPressed() {
-		applyKernel(Kernels.leftSobel);
+		applyKernel(Kernel.SOBEL_LEFT);
 	}
 
 	/**
 	 * Called when the right sobel filter button is pressed.
 	 */
 	private void onRightSobelPressed() {
-		applyKernel(Kernels.rightSobel);
+		applyKernel(Kernel.SOBEL_RIGHT);
 	}
 
 	/**

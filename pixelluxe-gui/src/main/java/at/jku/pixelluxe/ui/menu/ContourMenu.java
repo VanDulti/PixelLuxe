@@ -6,12 +6,23 @@ import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
+/**
+ * A menu that shall contain all contour-related actions (e.g. horizontal, vertical, etc.).
+ */
 public class ContourMenu extends JMenu implements Component<JMenu> {
 	private final Runnable onHorizontal;
 	private final Runnable onVertical;
 	private final Runnable onLaplace;
 	private final Runnable onOutline;
 
+	/**
+	 * Creates a new ContourMenu.
+	 *
+	 * @param onHorizontal the action to perform when the horizontal contour is selected
+	 * @param onVertical   the action to perform when the vertical contour is selected
+	 * @param onLaplace    the action to perform when the laplace contour is selected
+	 * @param onOutline    the action to perform when the outline contour is selected
+	 */
 	public ContourMenu(Runnable onHorizontal, Runnable onVertical, Runnable onLaplace, Runnable onOutline) {
 		super("Contour");
 		this.onHorizontal = onHorizontal;

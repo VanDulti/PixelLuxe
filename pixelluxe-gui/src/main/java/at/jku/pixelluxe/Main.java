@@ -8,7 +8,6 @@ public class Main {
 
 	/**
 	 * Starts the PixelLuxe application.
-	 * @param args
 	 */
 	public static void main(String[] args) {
 		FlatDarkLaf.setup();

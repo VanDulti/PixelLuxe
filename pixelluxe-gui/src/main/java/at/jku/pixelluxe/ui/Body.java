@@ -2,10 +2,9 @@ package at.jku.pixelluxe.ui;
 
 import at.jku.pixelluxe.image.ImageFile;
 import at.jku.pixelluxe.image.PaintableImage;
-import at.jku.pixelluxe.ui.menu.ColorPane;
+import at.jku.pixelluxe.ui.components.ColorButton;
 import at.jku.pixelluxe.ui.tabs.DefaultTab;
 import at.jku.pixelluxe.ui.tools.Brush;
-import at.jku.pixelluxe.ui.tools.ColorPicker;
 import at.jku.pixelluxe.ui.tools.Eraser;
 import at.jku.pixelluxe.ui.tools.RectangularSelectionTool;
 
@@ -38,7 +37,7 @@ public class Body extends JPanel {
 	 * Initializes the body by setting up the toolbar and the default tab.
 	 */
 	public void initialize() {
-		ColorPicker colorPicker = new ColorPicker();
+		at.jku.pixelluxe.ui.tools.ColorPicker colorPicker = new at.jku.pixelluxe.ui.tools.ColorPicker();
 		setLayout(new BorderLayout(16, 16));
 
 		JPanel toolbarPanel = new JPanel();
@@ -66,12 +65,15 @@ public class Body extends JPanel {
 			}
 		}));
 
-		ColorPane colorPane = new ColorPane();
-		colorPane.addTo(mainToolBar);
-		colorPane.getComponent().addActionListener(new ColorPicker.ColorPaneListener(
-				tabPane,
-				colorPicker,
-				colorPane));
+		ColorButton colorPane = new ColorButton();
+		mainToolBar.add(colorPane.initialize());
+		colorPane.addListener(
+				new at.jku.pixelluxe.ui.tools.ColorPicker.ColorPaneListener(
+						tabPane,
+						colorPicker,
+						colorPane
+				)
+		);
 
 		JToolBar supplementaryToolBar = new JToolBar();
 		supplementaryToolBar.setFloatable(false);

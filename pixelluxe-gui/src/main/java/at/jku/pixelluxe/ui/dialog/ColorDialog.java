@@ -6,11 +6,21 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * A dialog for selecting a color.
+ */
 public class ColorDialog {
 	private final JDialog dialog;
 	private Color col;
 	private JColorChooser colorChooser;
 
+	/**
+	 * Creates a new ColorDialog.
+	 *
+	 * @param frame  the parent frame
+	 * @param width  the width of the dialog
+	 * @param height the height of the dialog
+	 */
 	public ColorDialog(JFrame frame, int width, int height) {
 		this.dialog = new JDialog(frame, "ColorDialog", true);
 		dialog.setSize(width, height);
@@ -59,10 +69,10 @@ public class ColorDialog {
 		dialog.setVisible(true);
 	}
 
+	/**
+	 * @return the selected color or null, if no color was selected
+	 */
 	public Color getColor() {
-		if (col == null) {
-			return Color.WHITE;
-		}
 		return col;
 	}
 

@@ -13,9 +13,17 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.function.Supplier;
 
+/**
+ * Menu for analyzing images, e.g. opening histograms.
+ */
 public class AnalyzeMenu extends JMenu implements Component<JMenu> {
 	private final Supplier<ImageFile> onOpenHistogram;
 
+	/**
+	 * Creates a new AnalyzeMenu.
+	 *
+	 * @param onOpenHistogram the supplier for opening a histogram
+	 */
 	public AnalyzeMenu(Supplier<ImageFile> onOpenHistogram) {
 		super("Analyze");
 		this.onOpenHistogram = onOpenHistogram;

@@ -32,7 +32,9 @@ public interface WorkingTool {
 	void release(PaintableImage image, int x, int y);
 
 	/**
-	 * @param g
+	 * Tools that draw something on the screen should implement this method.
+	 *
+	 * @param g the graphics object to draw on
 	 */
 	void draw(Graphics2D g);
 }

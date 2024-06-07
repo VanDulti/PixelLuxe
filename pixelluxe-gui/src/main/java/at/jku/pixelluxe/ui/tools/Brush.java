@@ -1,7 +1,6 @@
 package at.jku.pixelluxe.ui.tools;
 
 import at.jku.pixelluxe.image.PaintableImage;
-import at.jku.pixelluxe.ui.App;
 import at.jku.pixelluxe.ui.WorkingArea;
 import at.jku.pixelluxe.ui.dialog.DrawDialog;
 
@@ -10,20 +9,23 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-/*
-	Brush class defines the properties of a brush
+/**
+ * A brush tool that can be used to draw on an image.
  */
-
 public class Brush implements WorkingTool, Colorable {
-
 	private final int width;
 	private Color color;
 
+	/**
+	 * Creates a new Brush with the given width and color.
+	 *
+	 * @param width the width of the brush
+	 * @param color the color of the brush
+	 */
 	public Brush(int width, Color color) {
 		this.color = color;
 		this.width = width;
 	}
-
 
 	@Override
 	public void drag(PaintableImage image, int x1, int y1, int x2, int y2) {
@@ -55,8 +57,11 @@ public class Brush implements WorkingTool, Colorable {
 	}
 
 
+	/**
+	 * An ActionListener that opens a dialog to select the brush width and then sets the brush tool with the selected
+	 * width.
+	 */
 	public static class BrushActionListener implements ActionListener {
-
 		private final JTabbedPane tabPane;
 		private final ColorPicker colorPicker;
 
@@ -78,7 +83,5 @@ public class Brush implements WorkingTool, Colorable {
 			Brush brush = new Brush(brushWidth, colorPicker.getColor());
 			workingArea.setTool(brush);
 		}
-
 	}
-
 }
