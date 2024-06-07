@@ -109,7 +109,7 @@ public class WorkingArea extends JPanel {
 		setLayout(null);
 		setBackground(Color.LIGHT_GRAY);
 		addListeners();
-		historyObj = new History<>(image.copy(), 128);
+		historyObj = new History<>(image.copy(), 8);
 	}
 
 	/**
@@ -118,16 +118,12 @@ public class WorkingArea extends JPanel {
 	public void addListeners() {
 		ImageDragListener imageDragListener = new ImageDragListener();
 		toolListener = new ToolListener();
-		KeyListener keyListener = new KeyListener();
 
 		addMouseMotionListener(imageDragListener);
 		addMouseListener(imageDragListener);
 
 		addMouseMotionListener(toolListener);
 		addMouseListener(toolListener);
-
-		addKeyListener(keyListener);
-		requestFocusInWindow();
 
 		addMouseWheelListener(new ImageScaleListener());
 		addComponentListener(new WindowChangedListener());
@@ -159,7 +155,9 @@ public class WorkingArea extends JPanel {
 		g2d.translate(x, y);
 		AffineTransform oldTransform = g2d.getTransform();
 		g2d.scale(scale, scale);
-		g2d.drawImage(image.image(), 0, 0, this);
+
+		g2d.drawImage(image.image(), 0,0,this);
+
 		g2d.setTransform(oldTransform);
 		if (scale > PIXEL_GRID_SCALE_THRESHOLD) {
 			// Drawing a pixel grid around the images pixels (if zoomed in)
@@ -277,19 +275,6 @@ public class WorkingArea extends JPanel {
 		app.updateAndRepaint(image);
 	}
 
-	private class KeyListener extends KeyAdapter {
-		@Override
-		public void keyPressed(KeyEvent e) {
-			if (e.isControlDown() && e.getKeyCode() == 90) {
-				undo();
-			}
-
-			if (e.isControlDown() && e.getKeyCode() == 89) {
-				redo();
-			}
-		}
-	}
-
 	/**
 	 * A listener that listens for changes in the window size and adjusts the image's bounds accordingly. This makes the
 	 * image stay in view even when the window is resized.
@@ -346,6 +331,7 @@ public class WorkingArea extends JPanel {
 		 */
 		@Override
 		public void mouseReleased(MouseEvent e) {
+			takeSnapshot();
 			initialPoint = null;
 			if (currentTool != null) {
 				int x = getRelativeX(e.getPoint());
@@ -386,7 +372,6 @@ public class WorkingArea extends JPanel {
 			currentTool.drag(image, startPosX, startPosY, endPosX, endPosY);
 
 			initialPoint = currentPoint;
-			takeSnapshot();
 			render();
 		}
 

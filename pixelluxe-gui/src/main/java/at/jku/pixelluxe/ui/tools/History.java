@@ -75,6 +75,7 @@ public class History<T> {
 		}
 		history.removeFirst();
 		pos--;
+		add(elem);
 	}
 
 }
