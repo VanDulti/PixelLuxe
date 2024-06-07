@@ -59,7 +59,7 @@ public class WorkingArea extends JPanel {
 		setLayout(null);
 		setBackground(Color.LIGHT_GRAY);
 		addListeners();
-		historyObj = new History((PaintableImage)image.cloneImage(), 20);
+		historyObj = new History((PaintableImage)image.cloneImage(), 8);
 	}
 
 	public void addListeners() {
@@ -91,7 +91,9 @@ public class WorkingArea extends JPanel {
 		g2d.translate(x, y);
 		AffineTransform oldTransform = g2d.getTransform();
 		g2d.scale(scale, scale);
-		g2d.drawImage(image.image(), 0, 0, this);
+
+		g2d.drawImage(image.image(), 0,0,this);
+
 		g2d.setTransform(oldTransform);
 		if (scale > PIXEL_GRID_SCALE_THRESHOLD) {
 			// Drawing a pixel grid around the images pixels (if zoomed in)
@@ -104,8 +106,9 @@ public class WorkingArea extends JPanel {
 		}
 	}
 
-	public void takeSnapshot(){
-		historyObj.add((PaintableImage) image.cloneImage());
+
+	public void takeSnapshot() {
+		historyObj.add(image.cloneImage());
 	}
 
 	/**
