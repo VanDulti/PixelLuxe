@@ -6,12 +6,23 @@ import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
+/**
+ * A menu that shall contain all regular filter-related actions (e.g. invert, contrast, etc.).
+ */
 public class FilterMenu extends JMenu implements Component<JMenu> {
 	private final Runnable onInvert;
 	private final Runnable onContrast;
 	private final Runnable onSaturation;
 	private final Runnable onGrayScale;
 
+	/**
+	 * Creates a new FilterMenu.
+	 *
+	 * @param onInvert     the action to perform when the invert filter is selected
+	 * @param onContrast   the action to perform when the contrast filter is selected
+	 * @param onSaturation the action to perform when the saturation filter is selected
+	 * @param onGrayScale  the action to perform when the gray scale filter is selected
+	 */
 	public FilterMenu(Runnable onInvert, Runnable onContrast, Runnable onSaturation, Runnable onGrayScale) {
 		super("Filter");
 		this.onInvert = onInvert;

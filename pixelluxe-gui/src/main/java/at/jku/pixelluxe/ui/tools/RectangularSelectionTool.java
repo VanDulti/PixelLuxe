@@ -10,6 +10,14 @@ public class RectangularSelectionTool implements WorkingTool {
 	private Rectangle selection;
 
 	@Override
+	public void drag(PaintableImage image, int x1, int y1, int x2, int y2) {
+		if (selecting) {
+			endX = x2;
+			endY = y2;
+		}
+	}
+
+	@Override
 	public void set(PaintableImage image, int x, int y) {
 		startX = x;
 		startY = y;
@@ -17,19 +25,6 @@ public class RectangularSelectionTool implements WorkingTool {
 		endY = y;
 		selecting = true;
 		selection = null;
-	}
-
-	@Override
-	public String getToolName() {
-		return null;
-	}
-
-	@Override
-	public void drag(PaintableImage image, int x1, int y1, int x2, int y2) {
-		if (selecting) {
-			endX = x2;
-			endY = y2;
-		}
 	}
 
 	@Override

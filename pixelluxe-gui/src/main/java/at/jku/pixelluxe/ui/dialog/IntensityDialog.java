@@ -10,13 +10,18 @@ import java.util.Hashtable;
 /**
  * Defines the Dialog which pops up when the Draw Button is pressed
  */
-
 public class IntensityDialog {
 	private final JDialog dialog;
 	private int intensity;
 	private JSlider slider;
 
-
+	/**
+	 * Creates a new DrawDialog.
+	 *
+	 * @param frame  the parent frame
+	 * @param width  the width of the dialog
+	 * @param height the height of the dialog
+	 */
 	public IntensityDialog(JFrame frame, int width, int height) {
 		this.dialog = new JDialog(frame, "Select Intensity", true);
 		dialog.setSize(width, height);

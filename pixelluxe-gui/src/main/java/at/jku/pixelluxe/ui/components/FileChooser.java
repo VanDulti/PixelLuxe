@@ -1,4 +1,4 @@
-package at.jku.pixelluxe.ui.menu;
+package at.jku.pixelluxe.ui.components;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -6,6 +6,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
+/**
+ * A file chooser that can be used to open and save files. It uses the native file chooser dialog of the operating
+ * system and handles errors that might occur during file selection. Aside from that, this file chooser is not
+ * opinionated and therefore does not enforce anything really.
+ */
 public class FileChooser {
 	private final FileFilter openFileFilter;
 	private final FileFilter saveFileFilter;

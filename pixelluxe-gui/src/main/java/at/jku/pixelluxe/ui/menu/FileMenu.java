@@ -7,6 +7,9 @@ import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
+/**
+ * A menu that shall contain all filter-related actions (e.g. invert, contrast, etc.).
+ */
 public class FileMenu extends JMenu implements Component<JMenu> {
 	private final Runnable onOpen;
 	private final Runnable onSave;
@@ -14,6 +17,15 @@ public class FileMenu extends JMenu implements Component<JMenu> {
 	private final Runnable onUndo;
 	private final Runnable onRedo;
 
+	/**
+	 * Creates a new FileMenu.
+	 *
+	 * @param onOpen   the action to perform when the open file is selected
+	 * @param onSave   the action to perform when the save file is selected
+	 * @param onSaveAs the action to perform when the save file as is selected
+	 * @param onUndo   the action to perform when the undo is selected
+	 * @param onRedo   the action to perform when the redo is selected
+	 */
 	public FileMenu(Runnable onOpen, Runnable onSave, Runnable onSaveAs, Runnable onUndo, Runnable onRedo) {
 		super("File");
 		this.onOpen = onOpen;
@@ -52,6 +64,4 @@ public class FileMenu extends JMenu implements Component<JMenu> {
 		add(redoButton);
 		return this;
 	}
-
-
 }

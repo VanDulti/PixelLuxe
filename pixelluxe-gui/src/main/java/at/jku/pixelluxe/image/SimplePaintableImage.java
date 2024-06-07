@@ -5,23 +5,30 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
 
-public class SimplePaintableImage implements PaintableImage {
-
-	private BufferedImage image;
+/**
+ * As the name suggest, a simple implementation of a paintable image, based on a buffered image that is directly drawn
+ * on.
+ */
+public class SimplePaintableImage implements PaintableImage {private BufferedImage image;
 
 	private BufferedImage[] layers = new BufferedImage[2];
 
-	public SimplePaintableImage(BufferedImage img) {
-		this.image = img;
-		layers[0] = cloneBufferedImage(img);
-		layers[1] = createToolLayer(img);
+	/**
+	 * Creates a new paintable image from the given image, using it as a base layer and painting everything on a virtual layer on top of it.
+	 * This allows for erasing previously drawn lines for example.
+	 * 
+	 * @param image the backing buffered image
+	 */
+	public SimplePaintableImage(BufferedImage image) {
+		this.image = image;
+		layers[0] = cloneBufferedImage(image);
+		layers[1] = createToolLayer(image);
 	}
 
 	private SimplePaintableImage(BufferedImage img, BufferedImage[] layers) {
 		this(img);
 		this.layers = layers;
 	}
-
 	@Override
 	public int getWidth() {
 		return image.getWidth(null);
@@ -49,12 +56,6 @@ public class SimplePaintableImage implements PaintableImage {
 		mergeLayers();
 	}
 
-	@Override
-	public Color getColor(int x, int y) {
-		int rgba = image.getRGB(x, y);
-		return new Color(rgba);
-	}
-
 	//Only a simple erasor;
 	@Override
 	public void eraseLine(int x1, int y1, int x2, int y2, int width) {
@@ -65,8 +66,8 @@ public class SimplePaintableImage implements PaintableImage {
 	}
 
 	@Override
-	public SimplePaintableImage cloneImage()  {
-		ColorModel cm = this.image.getColorModel();
+	public SimplePaintableImage copy() {
+		ColorModel cm = image.getColorModel();
 		boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
 		WritableRaster raster = this.image.copyData(null);
 		BufferedImage[] newLayers = new BufferedImage[layers.length];

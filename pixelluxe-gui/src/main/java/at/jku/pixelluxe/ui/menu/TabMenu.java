@@ -7,9 +7,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
+/**
+ * A menu that shall contain all tab-related actions (e.g. close tab, etc.).
+ */
 public class TabMenu extends JMenu implements Component<JMenu> {
 	private final Runnable onClose;
 
+	/**
+	 * Creates a new TabMenu.
+	 *
+	 * @param onClose the action to perform when the close tab is selected
+	 */
 	public TabMenu(Runnable onClose) {
 		super("Tab");
 		this.onClose = onClose;

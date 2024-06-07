@@ -10,14 +10,18 @@ import java.util.Hashtable;
 /**
  * Defines the Dialog which pops up when the Draw Button is pressed
  */
-
 public class DrawDialog {
 	private final JDialog dialog;
 	private int brushWidth;
 	private JSlider slider;
 
-
-
+	/**
+	 * Creates a new DrawDialog.
+	 *
+	 * @param frame  the parent frame
+	 * @param width  the width of the dialog
+	 * @param height the height of the dialog
+	 */
 	public DrawDialog(JFrame frame, int width, int height, int min, int max, int thickSpacing, int startValue) {
 		this.dialog = new JDialog(frame, "DrawDialog", true);
 		dialog.setSize(width, height);
@@ -65,6 +69,9 @@ public class DrawDialog {
 		dialog.setVisible(true);
 	}
 
+	/**
+	 * @return the selected brush width
+	 */
 	public int getBrushWidth() {
 		return brushWidth;
 	}
