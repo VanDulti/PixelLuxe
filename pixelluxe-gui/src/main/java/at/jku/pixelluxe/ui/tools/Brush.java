@@ -78,7 +78,7 @@ public class Brush implements WorkingTool, Colorable {
 				return;
 			}
 
-			DrawDialog drawDialog = new DrawDialog(null, 250, 100, 1, 12, 1,1);
+			DrawDialog drawDialog = new DrawDialog(null, 250, 100, 2, 20, 3,2);
 			int brushWidth = drawDialog.getBrushWidth();
 			Brush brush = new Brush(brushWidth, colorPicker.getColor());
 			workingArea.setTool(brush);
