@@ -47,12 +47,10 @@ public class SimplePaintableImage implements PaintableImage {private BufferedIma
 	@Override
 	public void drawLine(int x1, int y1, int x2, int y2, Color color, int width) {
 		Graphics2D graphics = (Graphics2D) layers[1].getGraphics();
-
 		graphics.setColor(color);
 		graphics.setStroke(new BasicStroke(width));
 		graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		graphics.drawLine(x1, y1, x2, y2);
-
 		mergeLayers();
 	}
 
@@ -60,8 +58,9 @@ public class SimplePaintableImage implements PaintableImage {private BufferedIma
 	@Override
 	public void eraseLine(int x1, int y1, int x2, int y2, int width) {
 		Graphics2D graphics = (Graphics2D) layers[1].getGraphics();
-		graphics.setBackground(new Color(0,0,0,0));
-		graphics.clearRect(x1,y1,width, width);
+		graphics.setComposite(AlphaComposite.Clear);
+		graphics.setStroke(new BasicStroke(width, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER));
+		graphics.drawLine(x1,y1, x2, y2);
 		mergeLayers();
 	}
 

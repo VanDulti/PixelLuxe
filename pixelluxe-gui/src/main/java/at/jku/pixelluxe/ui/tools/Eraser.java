@@ -53,7 +53,7 @@ public class Eraser implements WorkingTool {
 				return;
 			}
 
-			DrawDialog drawDialog = new DrawDialog(null, 250, 100, 5, 20, 5, 5);
+			DrawDialog drawDialog = new DrawDialog(null, 250, 100, 2, 26, 4, 2);
 			int eraserWidth = drawDialog.getBrushWidth();
 			Eraser eraser = new Eraser(eraserWidth);
 			workingArea.setTool(eraser);

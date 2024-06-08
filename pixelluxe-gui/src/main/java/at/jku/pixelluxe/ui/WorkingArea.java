@@ -461,7 +461,6 @@ public class WorkingArea extends JPanel {
 
 			initialPoint = currentPoint;
 			new Rectangle();
-
 			render();
 		}
 
