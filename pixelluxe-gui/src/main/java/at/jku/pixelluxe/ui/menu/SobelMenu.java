@@ -6,12 +6,23 @@ import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
+/**
+ * A menu that shall contain all Sobel-Filter-related actions (e.g. Sobel top, Sobel bottom, etc.).
+ */
 public class SobelMenu extends JMenu implements Component<JMenu> {
 	private final Runnable onTopSobel;
 	private final Runnable onBottomSobel;
 	private final Runnable onLeftSobel;
 	private final Runnable onRightSobel;
 
+	/**
+	 * Creates a new SobelMenu.
+	 *
+	 * @param OnTopSobel    the action to perform when the top Sobel is selected
+	 * @param onBottomSobel the action to perform when the bottom Sobel is selected
+	 * @param onLeftSobel   the action to perform when the left Sobel is selected
+	 * @param onRightSobel  the action to perform when the right Sobel is selected
+	 */
 	public SobelMenu(Runnable OnTopSobel, Runnable onBottomSobel, Runnable onLeftSobel, Runnable onRightSobel) {
 		super("Sobel");
 		this.onTopSobel = OnTopSobel;

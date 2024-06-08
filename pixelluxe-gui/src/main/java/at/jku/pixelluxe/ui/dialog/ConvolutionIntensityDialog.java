@@ -6,13 +6,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Hashtable;
 
-public class ConvIntensityDialog {
+/**
+ * A dialog for selecting the intensity of a convolution. The intensity is a value between 0 and 5.
+ */
+public class ConvolutionIntensityDialog {
 	private final JDialog dialog;
 	private int intensity;
 	private JSlider slider;
 
-
-	public ConvIntensityDialog(JFrame frame, int width, int height) {
+	/**
+	 * Creates a new ConvolutionIntensityDialog.
+	 *
+	 * @param frame  the parent frame
+	 * @param width  the width of the dialog
+	 * @param height the height of the dialog
+	 */
+	public ConvolutionIntensityDialog(JFrame frame, int width, int height) {
 		this.dialog = new JDialog(frame, "Select Intensity", true);
 		dialog.setSize(width, height);
 		addComponents();
