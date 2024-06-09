@@ -66,7 +66,7 @@ public class History<T> {
 	public void add(T elem) {
 		if (pos < maxSize - 1) {
 			pos++;
-			if (history.size() < maxSize) {
+			if (history.size() < maxSize && pos >= history.size()) {
 				history.add(elem);
 			} else {
 				history.set(pos, elem);
